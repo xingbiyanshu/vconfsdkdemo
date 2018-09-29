@@ -1,7 +1,9 @@
 package com.sissi.vconfsdkdemo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -11,12 +13,15 @@ import com.sissi.vconfsdk.login.MemberStateManager;
 import com.sissi.vconfsdk.utils.KLog;
 
 public class LoginActivity extends AppCompatActivity
-        implements LoginManager.OnLoginResultListener, MemberStateManager.OnMemberStateChangedListener{
+        implements LoginManager.OnLoginResultListener, MemberStateManager.OnMemberStateChangedListener, LoginFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.login_frame, new LoginFragment());
+        ft.commitAllowingStateLoss();
     }
 
     @Override
@@ -93,5 +98,10 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onMemberStateChanged() {
         KLog.p("####");
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
