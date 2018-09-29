@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sissi.vconfsdk.base.RequestAgent;
+import com.sissi.vconfsdk.base.AgentManager;
 import com.sissi.vconfsdk.login.LoginManager;
 import com.sissi.vconfsdk.login.MemberStateManager;
 import com.sissi.vconfsdk.utils.KLog;
@@ -113,7 +113,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(View view) {
-        LoginManager loginManager = (LoginManager) RequestAgent.instance(LoginManager.class);
+        LoginManager loginManager = (LoginManager) AgentManager.create(LoginManager.class);
         loginManager.login("server", "account", "passwd", new LoginManager.OnLoginResultListener() {
             @Override
             public void onLoginSuccess() {

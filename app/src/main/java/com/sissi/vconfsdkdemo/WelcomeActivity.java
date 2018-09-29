@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sissi.vconfsdk.base.RequestAgent;
+import com.sissi.vconfsdk.base.AgentManager;
 import com.sissi.vconfsdk.startup.StartManager;
 
 public class WelcomeActivity extends AppCompatActivity
@@ -15,7 +15,7 @@ public class WelcomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        StartManager startManager = (StartManager) RequestAgent.instance(StartManager.class);
+        StartManager startManager = (StartManager) AgentManager.create(StartManager.class);
         startManager.startup(0, this);
     }
 

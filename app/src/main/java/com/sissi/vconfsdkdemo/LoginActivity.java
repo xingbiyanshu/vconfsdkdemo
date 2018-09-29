@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.sissi.vconfsdk.base.RequestAgent;
+import com.sissi.vconfsdk.base.AgentManager;
 import com.sissi.vconfsdk.login.LoginManager;
 import com.sissi.vconfsdk.login.MemberStateManager;
 import com.sissi.vconfsdk.utils.KLog;
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void login(View view) {
-        LoginManager loginManager = (LoginManager) RequestAgent.instance(LoginManager.class);
+        LoginManager loginManager = (LoginManager) AgentManager.create(LoginManager.class);
         loginManager.login("server", "account", "passwd", new LoginManager.OnLoginResultListener() {
             @Override
             public void onLoginSuccess() {
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
-        MemberStateManager memberStateManager = (MemberStateManager) RequestAgent.instance(MemberStateManager.class);
+        MemberStateManager memberStateManager = (MemberStateManager) AgentManager.create(MemberStateManager.class);
         memberStateManager.addOnMemberStateChangedListener(this);
     }
 
