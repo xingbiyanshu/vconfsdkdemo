@@ -51,7 +51,23 @@ public class LoginActivity extends AppCompatActivity
 
     public void login(View view) {
         LoginManager loginManager = (LoginManager) RequestAgent.instance(LoginManager.class);
-        loginManager.login("server", "account", "passwd", this);
+        loginManager.login("server", "account", "passwd", new LoginManager.OnLoginResultListener() {
+            @Override
+            public void onLoginSuccess() {
+                KLog.p("####>>");
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            }
+
+            @Override
+            public void onLoginFailed(int i) {
+
+            }
+
+            @Override
+            public void onLoginTimeout() {
+
+            }
+        });
 
         MemberStateManager memberStateManager = (MemberStateManager) RequestAgent.instance(MemberStateManager.class);
         memberStateManager.addOnMemberStateChangedListener(this);
