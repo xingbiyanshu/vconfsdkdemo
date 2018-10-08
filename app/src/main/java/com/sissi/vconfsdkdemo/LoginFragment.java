@@ -112,26 +112,13 @@ public class LoginFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void login(View view) {
-        LoginManager loginManager = (LoginManager) AgentManager.create(LoginManager.class);
-        loginManager.login("server", "account", "passwd", new LoginManager.OnLoginResultListener() {
-            @Override
-            public void onLoginSuccess() {
-                KLog.p("####>>");
-                startActivity(new Intent(LoginFragment.this.getContext(), MainActivity.class));
-            }
-
-            @Override
-            public void onLoginFailed(int i) {
-
-            }
-
-            @Override
-            public void onLoginTimeout() {
-
-            }
-        });
-
-    }
+//    public void login(View view) {
+//        LoginManager loginManager = (LoginManager) AgentManager.obtain(LoginManager.class);
+//        loginManager.login("server", "account", "passwd", (i, o) -> {
+//            KLog.p("#### resultCode=%s, response=%s ", i, o);
+//            startActivity(new Intent(getContext(), MainActivity.class));
+//        });
+//
+//    }
 
 }

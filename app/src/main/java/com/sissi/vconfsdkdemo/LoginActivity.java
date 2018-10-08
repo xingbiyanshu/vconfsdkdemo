@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.sissi.vconfsdk.base.AgentManager;
+import com.sissi.vconfsdk.base.IOnResponseListener;
+import com.sissi.vconfsdk.base.ResultCode;
 import com.sissi.vconfsdk.login.LoginManager;
 import com.sissi.vconfsdk.login.MemberStateManager;
 import com.sissi.vconfsdk.utils.KLog;
 
 public class LoginActivity extends AppCompatActivity
-        implements LoginManager.OnLoginResultListener, MemberStateManager.OnMemberStateChangedListener, LoginFragment.OnFragmentInteractionListener{
+        implements MemberStateManager.OnMemberStateChangedListener, LoginFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,43 +57,14 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void login(View view) {
-        LoginManager loginManager = (LoginManager) AgentManager.create(LoginManager.class);
-        loginManager.login("server", "account", "passwd", new LoginManager.OnLoginResultListener() {
-            @Override
-            public void onLoginSuccess() {
-                KLog.p("####>>");
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            }
-
-            @Override
-            public void onLoginFailed(int i) {
-
-            }
-
-            @Override
-            public void onLoginTimeout() {
-
-            }
+        LoginManager loginManager = (LoginManager) AgentManager.obtain(LoginManager.class);
+        loginManager.login("server", "account", "passwd", (i, o) -> {
+                KLog.p("#### resultCode=%s, response=%s ", i, o);
+            startActivity(new Intent(this, MainActivity.class));
         });
 
-        MemberStateManager memberStateManager = (MemberStateManager) AgentManager.create(MemberStateManager.class);
+        MemberStateManager memberStateManager = (MemberStateManager) AgentManager.obtain(MemberStateManager.class);
         memberStateManager.addOnMemberStateChangedListener(this);
-    }
-
-    @Override
-    public void onLoginSuccess() {
-        KLog.p("####");
-        startActivity(new Intent(this, MainActivity.class));
-    }
-
-    @Override
-    public void onLoginFailed(int errorCode) {
-        KLog.p("####");
-    }
-
-    @Override
-    public void onLoginTimeout() {
-        KLog.p("####");
     }
 
     @Override
