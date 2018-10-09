@@ -59,12 +59,12 @@ public class LoginActivity extends AppCompatActivity
     public void login(View view) {
         LoginManager loginManager = (LoginManager) AgentManager.obtain(LoginManager.class);
         loginManager.login("server", "account", "passwd", (i, o) -> {
-                KLog.p("#### resultCode=%s, response=%s ", i, o);
+            KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(this, MainActivity.class));
         });
 
-        MemberStateManager memberStateManager = (MemberStateManager) AgentManager.obtain(MemberStateManager.class);
-        memberStateManager.addOnMemberStateChangedListener(this);
+//        MemberStateManager memberStateManager = (MemberStateManager) AgentManager.obtain(MemberStateManager.class);
+//        memberStateManager.addOnMemberStateChangedListener(this);
     }
 
     @Override

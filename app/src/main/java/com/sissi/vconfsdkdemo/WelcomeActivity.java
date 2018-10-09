@@ -18,14 +18,19 @@ public class WelcomeActivity extends AppCompatActivity {
 
         StartManager startManager = (StartManager) AgentManager.obtain(StartManager.class);
         startManager.startup(0, (i, o)->{
-            KLog.p("#### dd=%s, resultCode=%s, response=%s ", dd, i, o);
+//            KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(this, LoginActivity.class));
+//            printInfo();
         });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    private void printInfo(){
+        KLog.p("test");
     }
 
 }
