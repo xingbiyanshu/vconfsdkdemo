@@ -112,13 +112,13 @@ public class LoginFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-//    public void login(View view) {
-//        LoginManager loginManager = (LoginManager) AgentManager.obtain(LoginManager.class);
-//        loginManager.login("server", "account", "passwd", (i, o) -> {
-//            KLog.p("#### resultCode=%s, response=%s ", i, o);
-//            startActivity(new Intent(getContext(), MainActivity.class));
-//        });
-//
-//    }
+    public void login(View view) {
+        LoginManager loginManager = AgentManager.obtain(LoginManager.class);
+        loginManager.login("server", "account", "passwd", (i, o) -> {
+            KLog.p("#### resultCode=%s, response=%s ", i, o);
+            startActivity(new Intent(getContext(), MainActivity.class));
+        });
+
+    }
 
 }

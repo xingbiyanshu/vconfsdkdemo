@@ -16,7 +16,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        StartManager startManager = (StartManager) AgentManager.obtain(StartManager.class);
+        StartManager startManager = AgentManager.obtain(StartManager.class);
         startManager.startup(0, (i, o)->{
             KLog.p("#### dd=%s, resultCode=%s, response=%s ", dd, i, o);
             startActivity(new Intent(this, LoginActivity.class));

@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.sissi.vconfsdk.base.AgentManager;
-import com.sissi.vconfsdk.base.IOnResponseListener;
-import com.sissi.vconfsdk.base.ResultCode;
 import com.sissi.vconfsdk.login.LoginManager;
 import com.sissi.vconfsdk.login.MemberStateManager;
 import com.sissi.vconfsdk.utils.KLog;
@@ -57,13 +55,13 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void login(View view) {
-        LoginManager loginManager = (LoginManager) AgentManager.obtain(LoginManager.class);
+        LoginManager loginManager = AgentManager.obtain(LoginManager.class);
         loginManager.login("server", "account", "passwd", (i, o) -> {
                 KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(this, MainActivity.class));
         });
 
-        MemberStateManager memberStateManager = (MemberStateManager) AgentManager.obtain(MemberStateManager.class);
+        MemberStateManager memberStateManager = AgentManager.obtain(MemberStateManager.class);
         memberStateManager.addOnMemberStateChangedListener(this);
     }
 
