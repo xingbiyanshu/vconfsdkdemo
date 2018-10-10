@@ -115,7 +115,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(View view) {
-        LoginManager loginManager = (LoginManager) AgentManager.obtain(LoginManager.class);
+        LoginManager loginManager = AgentManager.obtain(LoginManager.class);
         loginManager.login("server", "account", "passwd", (i, o) -> {
             KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(getContext(), MainActivity.class));
