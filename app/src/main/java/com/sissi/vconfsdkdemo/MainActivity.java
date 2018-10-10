@@ -13,28 +13,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        KLog.p("-->");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        KLog.p("-->");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        KLog.p("-->");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        KLog.p("-->");
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        KLog.p("-->");
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        KLog.p("-->");
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        KLog.p("-->");
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        KLog.p("-->");
+//    }
 
 }
