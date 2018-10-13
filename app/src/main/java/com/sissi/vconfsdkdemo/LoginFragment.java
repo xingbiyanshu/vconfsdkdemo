@@ -70,7 +70,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view =  inflater.inflate(R.layout.fragment_login, container, false);
+        view.findViewById(R.id.login).setOnClickListener(this::login);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -118,6 +120,9 @@ public class LoginFragment extends Fragment {
             KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(getContext(), MainActivity.class));
         });
+
+        MemberStateManager memberStateManager = AgentManager.obtain(MemberStateManager.class);
+        memberStateManager.subscribeMemberState(o -> KLog.p("#### %s, notification=%s ", this, o));
 
     }
 
