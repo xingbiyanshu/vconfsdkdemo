@@ -24,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
         dataCollaborateManager.login("127.0.0.1", 6666, MsgConst.EmDcsType.emTypeTrueTouchPhoneAndroid, (i, o)->{
             KLog.p("#### resultCode=%s, response=%s ", i, o);
             if (ResultCode.SUCCESS == i){
-                startActivity(new Intent(this, DataCollaborateActivity.class));
+                dataCollaborateManager.createDcConf((rc, r)->{
+                    if (ResultCode.SUCCESS == rc) startActivity(new Intent(this, DataCollaborateActivity.class));
+                });
             }
         });
     }
