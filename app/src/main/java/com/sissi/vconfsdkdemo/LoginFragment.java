@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sissi.vconfsdk.base.AgentManager;
-import com.sissi.vconfsdk.login.LoginManager;
-import com.sissi.vconfsdk.login.MemberStateManager;
-import com.sissi.vconfsdk.utils.KLog;
+import com.kedacom.vconf.sdk.base.AgentManager;
+import com.kedacom.vconf.sdk.login.LoginManager;
+import com.kedacom.vconf.sdk.login.MemberStateManager;
+import com.kedacom.vconf.sdk.utils.KLog;
 
 
 /**

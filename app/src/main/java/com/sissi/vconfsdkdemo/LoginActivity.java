@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import com.sissi.vconfsdk.utils.KLog;
+import com.kedacom.vconf.sdk.utils.KLog;
 
 public class LoginActivity extends AppCompatActivity
         implements  LoginFragment.OnFragmentInteractionListener{

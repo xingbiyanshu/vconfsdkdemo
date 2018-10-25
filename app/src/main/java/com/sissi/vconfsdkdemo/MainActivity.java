@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.sissi.vconfsdk.base.AgentManager;
-import com.sissi.vconfsdk.base.MsgConst;
-import com.sissi.vconfsdk.base.ResultCode;
-import com.sissi.vconfsdk.datacollaborate.DataCollaborateManager;
-import com.sissi.vconfsdk.utils.KLog;
+import com.kedacom.vconf.sdk.base.AgentManager;
+import com.kedacom.vconf.sdk.base.MsgConst;
+import com.kedacom.vconf.sdk.base.ResultCode;
+import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
+import com.kedacom.vconf.sdk.utils.KLog;
 
 public class MainActivity extends AppCompatActivity {
 
