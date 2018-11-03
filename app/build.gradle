@@ -38,5 +38,5 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.kedacom.vconf.sdk:main:0.0.2'
-    implementation 'com.kedacom.vconf.sdk:datacollaborate:0.0.4'
+    implementation 'com.kedacom.vconf.sdk:datacollaborate:0.0.5'
 }
