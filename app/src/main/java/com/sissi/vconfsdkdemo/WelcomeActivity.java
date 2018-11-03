@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.kedacom.vconf.sdk.base.AgentManager;
+import com.kedacom.vconf.sdk.base.IResultListener;
 import com.kedacom.vconf.sdk.startup.StartManager;
 import com.kedacom.vconf.sdk.utils.KLog;
 
@@ -29,10 +30,17 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void enter(View view) {
         StartManager startManager = AgentManager.obtain(StartManager.class);
-        startManager.startup(0, (i, o)->{
+        startManager.startup(0, /*(i, o)->{
 //            KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(this, LoginActivity.class));
 //            printInfo();
-        });
+        }*/
+        new IResultListener() {
+            @Override
+            public void onResponse(int resultCode, Object response) {
+                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+            }
+        }
+        );
     }
 }

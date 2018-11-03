@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kedacom.vconf.sdk.base.AgentManager;
+import com.kedacom.vconf.sdk.base.IResultListener;
 import com.kedacom.vconf.sdk.login.LoginManager;
 import com.kedacom.vconf.sdk.login.MemberStateManager;
 import com.kedacom.vconf.sdk.utils.KLog;
@@ -116,13 +117,19 @@ public class LoginFragment extends Fragment {
 
     public void login(View view) {
         LoginManager loginManager = AgentManager.obtain(LoginManager.class);
-        loginManager.login("server", "account", "passwd", (i, o) -> {
+        loginManager.login("server", "account", "passwd", /*(i, o) -> {
             KLog.p("#### resultCode=%s, response=%s ", i, o);
             startActivity(new Intent(getContext(), MainActivity.class));
-        });
+        }*/
+                new IResultListener() {
+                    @Override
+                    public void onResponse(int resultCode, Object response) {
+                        startActivity(new Intent(getContext(), MainActivity.class));
+                    }
+                });
 
-        MemberStateManager memberStateManager = AgentManager.obtain(MemberStateManager.class);
-        memberStateManager.subscribeMemberState(o -> KLog.p("#### %s, notification=%s ", this, o));
+//        MemberStateManager memberStateManager = AgentManager.obtain(MemberStateManager.class);
+//        memberStateManager.subscribeMemberState(o -> KLog.p("#### %s, notification=%s ", this, o));
 
     }
 

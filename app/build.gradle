@@ -27,9 +27,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 //    implementation "android.arch.lifecycle:common-java8:1.1.1"
 
@@ -37,5 +37,6 @@ dependencies {
 //    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.kedacom.vconf.sdk:vconfsdk:0.0.6'
+    implementation 'com.kedacom.vconf.sdk:main:0.0.2'
+    implementation 'com.kedacom.vconf.sdk:datacollaborate:0.0.4'
 }
