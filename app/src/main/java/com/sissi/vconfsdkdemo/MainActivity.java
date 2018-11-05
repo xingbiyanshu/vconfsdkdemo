@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void enter(View view) {
         DataCollaborateManager dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
-        dataCollaborateManager.login("127.0.0.1", 6666, MsgConst.EmDcsType.emTypeTrueTouchPhoneAndroid, (i, o)->{
+        dataCollaborateManager.login("127.0.0.1", 6666, DataCollaborateManager.Terminal_TrueLinkAndroidPhone, (i, o)->{
             KLog.p("#### resultCode=%s, response=%s ", i, o);
             if (ResultCode.SUCCESS == i){
                 dataCollaborateManager.createDcConf((rc, r)->{
