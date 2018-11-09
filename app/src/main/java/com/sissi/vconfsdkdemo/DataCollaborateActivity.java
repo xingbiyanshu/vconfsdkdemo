@@ -43,12 +43,15 @@ public class DataCollaborateActivity extends AppCompatActivity {
         DefaultPainter painter = new DefaultPainter(this);
         dataCollaborateManager.setPainter(painter);
         ViewGroup vg = findViewById(R.id.data_collaborate_content);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800, 800);
 
 //        vg.addView(painter, params);
-        vg.addView(painter.getPaintView(), params);
+        View v = painter.getPaintView();
+        v.setAlpha(0.2f);
+        vg.setBackgroundColor(Color.GRAY);
+        vg.addView(v, params);
 //        wb.setBackgroundColor(Color.WHITE);
-//        vg.setBackgroundColor(Color.LTGRAY);
         new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 3000);
 //        dataCollaborateManager.ejectNtfs();
 
