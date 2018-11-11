@@ -34,9 +34,20 @@ dependencies {
 //    implementation "android.arch.lifecycle:common-java8:1.1.1"
 
 //    implementation(name: 'vconfsdk', ext: 'jar')
-//    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation "com.kedacom.vconf.sdk:main:0.2.12"
-    implementation "com.kedacom.vconf.sdk:datacollaborate:0.2.96"
+//    implementation ("com.kedacom.vconf.sdk:base:0.3.0-SNAPSHOT")
+    implementation ("com.kedacom.vconf.sdk:main:0.3.0-SNAPSHOT")
+//    implementation ("com.kedacom.vconf.sdk:main:0.3.0-SNAPSHOT@aar")
+//            {
+//        transitive = false
+//    }
+    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.0-SNAPSHOT")
+//    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.0-SNAPSHOT@aar")
+//            {
+//        transitive = false
+//    }
+//    implementation ('com.kedacom.vconf.sdk:datacollaborate:0.3.0'){
+//        changing=true
+//    }
 }

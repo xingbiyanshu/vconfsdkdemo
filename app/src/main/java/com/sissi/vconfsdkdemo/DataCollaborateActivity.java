@@ -4,11 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+//import com.google.gson.Gson;
 import com.kedacom.vconf.sdk.base.AgentManager;
 import com.kedacom.vconf.sdk.base.KLog;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.DefaultPainter;
 import com.kedacom.vconf.sdk.datacollaborate.RawPainter;
+import com.kedacom.vconf.sdk.datacollaborate.bean.DCEraseOp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -54,6 +56,10 @@ public class DataCollaborateActivity extends AppCompatActivity {
 //        wb.setBackgroundColor(Color.WHITE);
         new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 3000);
 //        dataCollaborateManager.ejectNtfs();
+
+//        Gson gson = new Gson();
+//        String json = gson.toJson(new DCEraseOp(1,2, 3, 4, 5));
+//        KLog.p("json=%s", json);
 
     }
 
