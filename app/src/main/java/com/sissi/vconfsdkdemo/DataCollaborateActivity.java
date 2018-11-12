@@ -43,18 +43,23 @@ public class DataCollaborateActivity extends AppCompatActivity {
         DataCollaborateManager dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
 //        RawPainter painter = new RawPainter(this);
         DefaultPainter painter = new DefaultPainter(this);
+
         dataCollaborateManager.setPainter(painter);
         ViewGroup vg = findViewById(R.id.data_collaborate_content);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800, 800);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
 //        vg.addView(painter, params);
+
         View v = painter.getPaintView();
-        v.setAlpha(0.2f);
-        vg.setBackgroundColor(Color.GRAY);
+//        v.setAlpha(0.2f);
+//        v.setBackgroundColor(Color.BLUE);
         vg.addView(v, params);
+
+        vg.setBackgroundColor(Color.BLUE);
+
 //        wb.setBackgroundColor(Color.WHITE);
-        new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 3000);
+        new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 1000);
 //        dataCollaborateManager.ejectNtfs();
 
 //        Gson gson = new Gson();
