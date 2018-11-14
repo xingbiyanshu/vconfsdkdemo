@@ -37,12 +37,12 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
 //    implementation ("com.kedacom.vconf.sdk:base:0.3.0-SNAPSHOT")
-    implementation ("com.kedacom.vconf.sdk:main:0.3.0-SNAPSHOT")
+    implementation ("com.kedacom.vconf.sdk:main:0.3.1-SNAPSHOT")
 //    implementation ("com.kedacom.vconf.sdk:main:0.3.0-SNAPSHOT@aar")
 //            {
 //        transitive = false
 //    }
-    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.0-SNAPSHOT")
+    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.1-SNAPSHOT")
 //    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.0-SNAPSHOT@aar")
 //            {
 //        transitive = false

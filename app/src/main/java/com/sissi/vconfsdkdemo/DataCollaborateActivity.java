@@ -10,7 +10,6 @@ import com.kedacom.vconf.sdk.base.KLog;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.DefaultPainter;
 import com.kedacom.vconf.sdk.datacollaborate.RawPainter;
-import com.kedacom.vconf.sdk.datacollaborate.bean.DCEraseOp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -56,7 +55,7 @@ public class DataCollaborateActivity extends AppCompatActivity {
 //        v.setBackgroundColor(Color.BLUE);
         vg.addView(v, params);
 
-        vg.setBackgroundColor(Color.BLUE);
+//        vg.setBackgroundColor(Color.BLUE);
 
 //        wb.setBackgroundColor(Color.WHITE);
         new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 1000);
