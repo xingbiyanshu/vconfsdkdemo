@@ -7,9 +7,9 @@ import android.view.View;
 
 import com.kedacom.vconf.sdk.base.AgentManager;
 import com.kedacom.vconf.sdk.base.MsgConst;
-import com.kedacom.vconf.sdk.base.ResultCode;
+import com.kedacom.vconf.sdk.base.CommonResultCode;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
-import com.kedacom.vconf.sdk.utils.KLog;
+//import com.kedacom.vconf.sdk.utils.KLog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
     public void enter(View view) {
         DataCollaborateManager dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
         dataCollaborateManager.login("127.0.0.1", 6666, DataCollaborateManager.Terminal_TrueLinkAndroidPhone, (i, o)->{
-            KLog.p("#### resultCode=%s, response=%s ", i, o);
-            if (ResultCode.SUCCESS == i){
+//            KLog.p("#### CommonResultCode=%s, response=%s ", i, o);
+            if (CommonResultCode.SUCCESS == i){
                 dataCollaborateManager.createDcConf((rc, r)->{
-                    if (ResultCode.SUCCESS == rc) startActivity(new Intent(this, DataCollaborateActivity.class));
+                    if (CommonResultCode.SUCCESS == rc) startActivity(new Intent(this, DataCollaborateActivity.class));
                 });
             }
         });

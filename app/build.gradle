@@ -16,6 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            java {
+//                exclude ['**/WelcomeActivity.java', '**/LoginActivity.java', '**/LoginFragment.java']
+                exclude '**/WelcomeActivity.java'
+                exclude '**/LoginActivity.java'
+                exclude '**/LoginFragment.java'
+            }
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -37,12 +47,13 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
 //    implementation ("com.kedacom.vconf.sdk:base:0.3.0-SNAPSHOT")
-    implementation ("com.kedacom.vconf.sdk:main:0.3.0-SNAPSHOT")
+//    implementation ("com.kedacom.vconf.sdk:main:0.3.2-SNAPSHOT")
 //    implementation ("com.kedacom.vconf.sdk:main:0.3.0-SNAPSHOT@aar")
 //            {
 //        transitive = false
 //    }
-    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.0-SNAPSHOT")
+    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.2-SNAPSHOT")
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 //    implementation ("com.kedacom.vconf.sdk:datacollaborate:0.3.0-SNAPSHOT@aar")
 //            {
 //        transitive = false

@@ -21,14 +21,159 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        layout="@layout/content_data_collaborate"/>
+        layout="@layout/content_data_collaborate" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tools_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/create_paintboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="new_pb"
+            app:layout_constraintBottom_toTopOf="@+id/op_drawline"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onCreatePaintBoardClicked"/>
+
+        <Button
+            android:id="@+id/switch_paintboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="swi_pb"
+            app:layout_constraintBaseline_toBaselineOf="@+id/create_paintboard"
+            app:layout_constraintStart_toEndOf="@+id/create_paintboard"
+            android:onClick="onSwitchPaintBoardClicked"/>
+
+        <Button
+            android:id="@+id/delete_paintboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="del_pb"
+            app:layout_constraintBaseline_toBaselineOf="@+id/switch_paintboard"
+            app:layout_constraintStart_toEndOf="@+id/switch_paintboard"
+            android:onClick="onDeletePaintBoardClicked"/>
+
+        <Button
+            android:id="@+id/button37"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            app:layout_constraintBaseline_toBaselineOf="@+id/delete_paintboard"
+            app:layout_constraintStart_toEndOf="@+id/delete_paintboard" />
+
+        <Button
+            android:id="@+id/op_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="erase"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onEraseClicked" />
+
+        <Button
+            android:id="@+id/op_zoomin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="zoomin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_erase"
+            app:layout_constraintStart_toEndOf="@+id/op_erase"
+            android:onClick="onZoominClicked"/>
+
+        <Button
+            android:id="@+id/op_zoomout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="zoomout"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_zoomin"
+            app:layout_constraintStart_toEndOf="@+id/op_zoomin"
+            android:onClick="onZoomoutClicked"/>
+
+        <Button
+            android:id="@+id/op_clearscreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="cls"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_zoomout"
+            app:layout_constraintStart_toEndOf="@+id/op_zoomout"
+            android:onClick="onClearScreenClicked"/>
+
+        <Button
+            android:id="@+id/op_drawline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="line"
+            app:layout_constraintBottom_toTopOf="@+id/op_insertpic"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onDrawLineClicked"/>
+
+        <Button
+            android:id="@+id/op_drawoval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="oval"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_drawline"
+            app:layout_constraintStart_toEndOf="@+id/op_drawline"
+            android:onClick="onDrawOvalClicked"/>
+
+        <Button
+            android:id="@+id/op_drawrect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rect"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_drawoval"
+            app:layout_constraintStart_toEndOf="@+id/op_drawoval"
+            android:onClick="onDrawRectClicked"/>
+
+        <Button
+            android:id="@+id/op_drawpath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="path"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_drawrect"
+            app:layout_constraintStart_toEndOf="@+id/op_drawrect"
+            android:onClick="onDrawPathClicked"/>
+
+        <Button
+            android:id="@+id/op_insertpic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="addpic"
+            app:layout_constraintBottom_toTopOf="@+id/op_erase"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onInsertPicClicked"/>
+
+        <Button
+            android:id="@+id/op_deletepic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delpic"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_insertpic"
+            app:layout_constraintStart_toEndOf="@+id/op_insertpic"
+            android:onClick="onDeletePicClicked"/>
+
+        <Button
+            android:id="@+id/op_undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="undo"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_deletepic"
+            app:layout_constraintStart_toEndOf="@+id/op_deletepic"
+            android:onClick="onUndoClicked"/>
+
+        <Button
+            android:id="@+id/op_redo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="redo"
+            app:layout_constraintBaseline_toBaselineOf="@+id/op_undo"
+            app:layout_constraintStart_toEndOf="@+id/op_undo"
+            android:onClick="onRedoClicked"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
