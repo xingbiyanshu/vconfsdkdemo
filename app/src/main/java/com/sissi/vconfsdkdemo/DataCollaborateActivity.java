@@ -7,8 +7,15 @@ import com.google.android.material.snackbar.Snackbar;
 //import com.google.gson.Gson;
 import com.kedacom.vconf.sdk.base.AgentManager;
 import com.kedacom.vconf.sdk.base.KLog;
+import com.kedacom.vconf.sdk.base.Msg;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
+import com.kedacom.vconf.sdk.datacollaborate.DefaultPaintFactory;
 import com.kedacom.vconf.sdk.datacollaborate.DefaultPainter;
+import com.kedacom.vconf.sdk.datacollaborate.IPaintBoard;
+import com.kedacom.vconf.sdk.datacollaborate.IPaintFactory;
+import com.kedacom.vconf.sdk.datacollaborate.IPainter;
+import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
+import com.kedacom.vconf.sdk.datacollaborate.bean.PaintBoardInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +26,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class DataCollaborateActivity extends AppCompatActivity {
+public class DataCollaborateActivity extends AppCompatActivity
+        implements DataCollaborateManager.IPaintBoardLifecycleListener, DataCollaborateManager.IOnPaintOpListener{
+
+    DataCollaborateManager dataCollaborateManager;
+    IPaintFactory paintFactory;
+    IPainter painter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +50,16 @@ public class DataCollaborateActivity extends AppCompatActivity {
 //        });
 
         KLog.p("dataCollaborateManager.setPainter");
-        DataCollaborateManager dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
+        dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
+        dataCollaborateManager.addPaintBoardLifecycleListener(this);
+        dataCollaborateManager.addPaintOpListener(this);
 //        RawPainter painter = new RawPainter(this);
 //        DefaultPainter painter = new DefaultPainter(this);
 
 //        dataCollaborateManager.setPainter(painter);
-        ViewGroup vg = findViewById(R.id.data_collaborate_content);
+//        ViewGroup vg = findViewById(R.id.data_collaborate_content);
+////        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
 //        vg.addView(painter, params);
 
@@ -54,61 +68,99 @@ public class DataCollaborateActivity extends AppCompatActivity {
 //        v.setBackgroundColor(Color.BLUE);
 //        vg.addView(v, params);
 
-        vg.setBackgroundColor(Color.BLUE);
+//        vg.setBackgroundColor(Color.BLUE);
 
-//        wb.setBackgroundColor(Color.WHITE);
-        new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 1000);
-//        dataCollaborateManager.ejectNtfs();
+//        new Handler().postDelayed(dataCollaborateManager::ejectNtfs, 1000);
 
-//        Gson gson = new Gson();
-//        String json = gson.toJson(new DCEraseOp(1,2, 3, 4, 5));
-//        KLog.p("json=%s", json);
+        paintFactory = new DefaultPaintFactory(this);
+        painter = paintFactory.createPainter();
+
 
     }
 
     public void onCreatePaintBoardClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsNewWhiteBoard_Ntf);
     }
 
     public void onSwitchPaintBoardClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsSwitch_Ntf);
     }
 
     public void onDeletePaintBoardClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsDelWhiteBoard_Ntf);
     }
 
     public void onEraseClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperEraseOperInfo_Ntf);
     }
 
     public void onZoominClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperFullScreen_Ntf);
     }
 
     public void onZoomoutClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperFullScreen_Ntf);
     }
 
     public void onClearScreenClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperClearScreen_Ntf);
     }
 
     public void onDrawLineClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperLineOperInfo_Ntf);
     }
 
     public void onDrawOvalClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperCircleOperInfo_Ntf);
     }
 
     public void onDrawRectClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperRectangleOperInfo_Ntf);
     }
 
     public void onDrawPathClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperPencilOperInfo_Ntf);
     }
 
     public void onInsertPicClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperInsertPic_Ntf);
     }
 
     public void onDeletePicClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperPitchPicDel_Ntf);
     }
 
     public void onUndoClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperUndo_Ntf);
     }
 
     public void onRedoClicked(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperRedo_Ntf);
+    }
+
+    @Override
+    public void onBoardCreated(PaintBoardInfo paintBoardInfo) {
+        IPaintBoard paintBoard = paintFactory.createPaintBoard();
+        paintBoard.addPaintView(paintFactory.createPaintView());
+        paintBoard.addPaintView(paintFactory.createPaintView());
+        painter.addPaintBoard(paintBoard);
+    }
+
+    @Override
+    public void onBoardDeleted(PaintBoardInfo paintBoardInfo) {
+        painter.deletePaintBoard(paintBoardInfo.id);
+    }
+
+    @Override
+    public void onBoardSwitched(PaintBoardInfo paintBoardInfo) {
+        painter.switchPaintBoard(paintBoardInfo.id);
+    }
+
+
+    @Override
+    public void onPaintOp(OpPaint opPaint) {
+        KLog.p("UI onPaintOp:%s", opPaint);
+        painter.paint(opPaint);
     }
 
 }
