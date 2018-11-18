@@ -77,7 +77,7 @@ public class DataCollaborateActivity extends AppCompatActivity {
 
     public void onEraseClicked(View view) {
     }
-    
+
     public void onZoominClicked(View view) {
     }
 
