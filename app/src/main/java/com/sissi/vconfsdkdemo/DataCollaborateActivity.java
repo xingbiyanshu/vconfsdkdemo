@@ -33,6 +33,8 @@ public class DataCollaborateActivity extends AppCompatActivity
     IPaintFactory paintFactory;
     IPainter painter;
 
+    ViewGroup boardContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,8 @@ public class DataCollaborateActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+        boardContainer = findViewById(R.id.data_collaborate_content);
 
         KLog.p("dataCollaborateManager.setPainter");
         dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
@@ -140,20 +144,24 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     @Override
     public void onBoardCreated(PaintBoardInfo paintBoardInfo) {
-        IPaintBoard paintBoard = paintFactory.createPaintBoard();
-        paintBoard.addPaintView(paintFactory.createPaintView());
-        paintBoard.addPaintView(paintFactory.createPaintView());
+        IPaintBoard paintBoard = paintFactory.createPaintBoard(paintBoardInfo);
         painter.addPaintBoard(paintBoard);
     }
 
     @Override
-    public void onBoardDeleted(PaintBoardInfo paintBoardInfo) {
-        painter.deletePaintBoard(paintBoardInfo.id);
+    public void onBoardDeleted(String boardId) {
+        // TODO 从视图系统中删除
+        painter.deletePaintBoard(boardId);
     }
 
     @Override
-    public void onBoardSwitched(PaintBoardInfo paintBoardInfo) {
-        painter.switchPaintBoard(paintBoardInfo.id);
+    public void onBoardSwitched(String boardId) {
+        IPaintBoard curPaintBoard = painter.switchPaintBoard(boardId);
+        if (null == curPaintBoard){
+            return;
+        }
+        View v = curPaintBoard.getBoardView();
+        boardContainer.addView(v,  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
 
