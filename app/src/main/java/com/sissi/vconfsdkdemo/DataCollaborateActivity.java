@@ -134,6 +134,10 @@ public class DataCollaborateActivity extends AppCompatActivity
         dataCollaborateManager.ejectNtf(Msg.DcsOperPitchPicDel_Ntf);
     }
 
+    public void onMovePic(View view) {
+        dataCollaborateManager.ejectNtf(Msg.DcsOperPitchPicDrag_Ntf);
+    }
+
     public void onUndoClicked(View view) {
         dataCollaborateManager.ejectNtf(Msg.DcsOperUndo_Ntf);
     }
@@ -150,18 +154,20 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     @Override
     public void onBoardDeleted(String boardId) {
-        // TODO 从视图系统中删除
-        painter.deletePaintBoard(boardId);
+        IPaintBoard paintBoard = painter.getPaintBoard(boardId);
+        if (null != paintBoard){
+            boardContainer.removeView(paintBoard.getBoardView());
+            painter.deletePaintBoard(boardId);
+        }
     }
 
     @Override
     public void onBoardSwitched(String boardId) {
         IPaintBoard curPaintBoard = painter.switchPaintBoard(boardId);
-        if (null == curPaintBoard){
-            return;
+        if (null != curPaintBoard){
+            View v = curPaintBoard.getBoardView();
+            boardContainer.addView(v,  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
-        View v = curPaintBoard.getBoardView();
-        boardContainer.addView(v,  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
 

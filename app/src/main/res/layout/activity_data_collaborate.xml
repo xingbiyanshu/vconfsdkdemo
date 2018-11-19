@@ -57,12 +57,13 @@
             android:onClick="onDeletePaintBoardClicked"/>
 
         <Button
-            android:id="@+id/button37"
+            android:id="@+id/op_movepic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="movepic"
             app:layout_constraintBaseline_toBaselineOf="@+id/delete_paintboard"
-            app:layout_constraintStart_toEndOf="@+id/delete_paintboard" />
+            app:layout_constraintStart_toEndOf="@+id/delete_paintboard"
+            android:onClick="onMovePic" />
 
         <Button
             android:id="@+id/op_erase"
