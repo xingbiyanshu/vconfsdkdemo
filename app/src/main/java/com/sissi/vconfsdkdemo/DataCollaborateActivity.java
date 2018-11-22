@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DataCollaborateActivity extends AppCompatActivity
-        implements DataCollaborateManager.IPaintBoardLifecycleListener, DataCollaborateManager.IOnPaintOpListener{
+        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener{
 
     DataCollaborateManager dataCollaborateManager;
     IPaintFactory paintFactory;
@@ -55,7 +55,7 @@ public class DataCollaborateActivity extends AppCompatActivity
 
         KLog.p("dataCollaborateManager.setPainter");
         dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
-        dataCollaborateManager.addPaintBoardLifecycleListener(this);
+        dataCollaborateManager.addBoardOpListener(this);
         dataCollaborateManager.addPaintOpListener(this);
 //        RawPainter painter = new RawPainter(this);
 //        DefaultPainter painter = new DefaultPainter(this);
@@ -83,67 +83,67 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onCreatePaintBoardClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsNewWhiteBoard_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCNewPaintBoardNtf);
     }
 
     public void onSwitchPaintBoardClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsSwitch_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCSwitchPaintBoardNtf);
     }
 
     public void onDeletePaintBoardClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsDelWhiteBoard_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCDelPaintBoardNtf);
     }
 
     public void onEraseClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperEraseOperInfo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCRectErasedNtf);
     }
 
     public void onZoominClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperFullScreen_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
     }
 
     public void onZoomoutClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperFullScreen_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
     }
 
     public void onClearScreenClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperClearScreen_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCScreenClearedNtf);
     }
 
     public void onDrawLineClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperLineOperInfo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCLineDrawnNtf);
     }
 
     public void onDrawOvalClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperCircleOperInfo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCOvalDrawnNtf);
     }
 
     public void onDrawRectClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperRectangleOperInfo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCRectDrawnNtf);
     }
 
     public void onDrawPathClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperPencilOperInfo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCPathDrawnNtf);
     }
 
     public void onInsertPicClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperInsertPic_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCPicInsertedNtf);
     }
 
     public void onDeletePicClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperPitchPicDel_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCPicDeletedNtf);
     }
 
     public void onMovePic(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperPitchPicDrag_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCPicDraggedNtf);
     }
 
     public void onUndoClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperUndo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCUndoneNtf);
     }
 
     public void onRedoClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DcsOperRedo_Ntf);
+        dataCollaborateManager.ejectNtf(Msg.DCRedoneNtf);
     }
 
     @Override
