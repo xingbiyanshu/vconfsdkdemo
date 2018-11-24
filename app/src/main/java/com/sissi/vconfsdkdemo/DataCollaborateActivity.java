@@ -14,8 +14,8 @@ import com.kedacom.vconf.sdk.datacollaborate.DefaultPainter;
 import com.kedacom.vconf.sdk.datacollaborate.IPaintBoard;
 import com.kedacom.vconf.sdk.datacollaborate.IPaintFactory;
 import com.kedacom.vconf.sdk.datacollaborate.IPainter;
+import com.kedacom.vconf.sdk.datacollaborate.bean.BoardInfo;
 import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
-import com.kedacom.vconf.sdk.datacollaborate.bean.PaintBoardInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -83,15 +83,15 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onCreatePaintBoardClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCNewPaintBoardNtf);
+        dataCollaborateManager.ejectNtf(Msg.DCBoardCreatedNtf);
     }
 
     public void onSwitchPaintBoardClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCSwitchPaintBoardNtf);
+        dataCollaborateManager.ejectNtf(Msg.DCBoardSwitchedNtf);
     }
 
     public void onDeletePaintBoardClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCDelPaintBoardNtf);
+        dataCollaborateManager.ejectNtf(Msg.DCBoardDeletedNtf);
     }
 
     public void onEraseClicked(View view) {
@@ -147,8 +147,8 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBoardCreated(PaintBoardInfo paintBoardInfo) {
-        IPaintBoard paintBoard = paintFactory.createPaintBoard(paintBoardInfo);
+    public void onBoardCreated(BoardInfo boardInfo) {
+        IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
         painter.addPaintBoard(paintBoard);
     }
 
