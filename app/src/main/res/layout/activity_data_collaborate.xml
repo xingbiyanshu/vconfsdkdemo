@@ -33,147 +33,180 @@
             android:id="@+id/create_paintboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onCreatePaintBoardClicked"
             android:text="new_pb"
             app:layout_constraintBottom_toTopOf="@+id/op_drawline"
-            app:layout_constraintStart_toStartOf="parent"
-            android:onClick="onCreatePaintBoardClicked"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/switch_paintboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onSwitchPaintBoardClicked"
             android:text="swi_pb"
             app:layout_constraintBaseline_toBaselineOf="@+id/create_paintboard"
-            app:layout_constraintStart_toEndOf="@+id/create_paintboard"
-            android:onClick="onSwitchPaintBoardClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/create_paintboard" />
 
         <Button
             android:id="@+id/delete_paintboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onDeletePaintBoardClicked"
             android:text="del_pb"
             app:layout_constraintBaseline_toBaselineOf="@+id/switch_paintboard"
-            app:layout_constraintStart_toEndOf="@+id/switch_paintboard"
-            android:onClick="onDeletePaintBoardClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/switch_paintboard" />
 
         <Button
             android:id="@+id/op_movepic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onMovePic"
             android:text="movepic"
             app:layout_constraintBaseline_toBaselineOf="@+id/delete_paintboard"
-            app:layout_constraintStart_toEndOf="@+id/delete_paintboard"
-            android:onClick="onMovePic" />
+            app:layout_constraintStart_toEndOf="@+id/delete_paintboard" />
 
         <Button
             android:id="@+id/op_erase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
+            android:onClick="onEraseClicked"
             android:text="erase"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:onClick="onEraseClicked" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/op_zoomin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onZoominClicked"
             android:text="zoomin"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_erase"
-            app:layout_constraintStart_toEndOf="@+id/op_erase"
-            android:onClick="onZoominClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_erase" />
 
         <Button
             android:id="@+id/op_zoomout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onZoomoutClicked"
             android:text="zoomout"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_zoomin"
-            app:layout_constraintStart_toEndOf="@+id/op_zoomin"
-            android:onClick="onZoomoutClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_zoomin" />
 
         <Button
             android:id="@+id/op_clearscreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:onClick="onClearScreenClicked"
             android:text="cls"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_zoomout"
-            app:layout_constraintStart_toEndOf="@+id/op_zoomout"
-            android:onClick="onClearScreenClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_zoomout" />
 
         <Button
             android:id="@+id/op_drawline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onDrawLineClicked"
             android:text="line"
             app:layout_constraintBottom_toTopOf="@+id/op_insertpic"
-            app:layout_constraintStart_toStartOf="parent"
-            android:onClick="onDrawLineClicked"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/op_drawoval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onDrawOvalClicked"
             android:text="oval"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_drawline"
-            app:layout_constraintStart_toEndOf="@+id/op_drawline"
-            android:onClick="onDrawOvalClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_drawline" />
 
         <Button
             android:id="@+id/op_drawrect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onDrawRectClicked"
             android:text="rect"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_drawoval"
-            app:layout_constraintStart_toEndOf="@+id/op_drawoval"
-            android:onClick="onDrawRectClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_drawoval" />
 
         <Button
             android:id="@+id/op_drawpath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onDrawPathClicked"
             android:text="path"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_drawrect"
-            app:layout_constraintStart_toEndOf="@+id/op_drawrect"
-            android:onClick="onDrawPathClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_drawrect" />
 
         <Button
             android:id="@+id/op_insertpic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onInsertPicClicked"
             android:text="addpic"
             app:layout_constraintBottom_toTopOf="@+id/op_erase"
-            app:layout_constraintStart_toStartOf="parent"
-            android:onClick="onInsertPicClicked"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/op_deletepic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onDeletePicClicked"
             android:text="delpic"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_insertpic"
-            app:layout_constraintStart_toEndOf="@+id/op_insertpic"
-            android:onClick="onDeletePicClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_insertpic" />
 
         <Button
             android:id="@+id/op_undo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onUndoClicked"
             android:text="undo"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_deletepic"
-            app:layout_constraintStart_toEndOf="@+id/op_deletepic"
-            android:onClick="onUndoClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_deletepic" />
 
         <Button
             android:id="@+id/op_redo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onRedoClicked"
             android:text="redo"
             app:layout_constraintBaseline_toBaselineOf="@+id/op_undo"
-            app:layout_constraintStart_toEndOf="@+id/op_undo"
-            android:onClick="onRedoClicked"/>
+            app:layout_constraintStart_toEndOf="@+id/op_undo" />
+
+        <Button
+            android:id="@+id/download_ops"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="download"
+            android:text="download"
+            app:layout_constraintBottom_toTopOf="@+id/create_paintboard"
+            app:layout_constraintStart_toStartOf="@+id/create_paintboard" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            app:layout_constraintBaseline_toBaselineOf="@+id/download_ops"
+            app:layout_constraintStart_toEndOf="@+id/download_ops" />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button7"
+            app:layout_constraintStart_toEndOf="@+id/button7" />
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="1dp"
+            android:text="Button"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button8"
+            app:layout_constraintEnd_toEndOf="@+id/op_movepic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -82,6 +82,10 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     }
 
+
+    public void download(View view) {
+    }
+
     public void onCreatePaintBoardClicked(View view) {
         dataCollaborateManager.ejectNtf(Msg.DCBoardCreatedNtf);
     }
