@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-//import com.google.gson.Gson;
-import com.kedacom.vconf.sdk.base.AgentManager;
 import com.kedacom.vconf.sdk.base.KLog;
 import com.kedacom.vconf.sdk.base.Msg;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
@@ -54,7 +52,7 @@ public class DataCollaborateActivity extends AppCompatActivity
         boardContainer = findViewById(R.id.data_collaborate_content);
 
         KLog.p("dataCollaborateManager.setPainter");
-        dataCollaborateManager = AgentManager.obtain(DataCollaborateManager.class);
+        dataCollaborateManager = DataCollaborateManager.getInstance();
         dataCollaborateManager.addBoardOpListener(this);
         dataCollaborateManager.addPaintOpListener(this);
 //        RawPainter painter = new RawPainter(this);
