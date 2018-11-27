@@ -26,9 +26,10 @@ allprojects {
 //            dirs 'libs'
 //        }
 
-//        maven {
+        maven {
 //            url "http://localhost:8081/repository/maven-releases/"
-//        }
+            url "http://127.0.0.1:8081/repository/maven-snapshots/"
+        }
     }
 }
 
