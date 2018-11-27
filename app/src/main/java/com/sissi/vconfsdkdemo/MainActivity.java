@@ -3,9 +3,12 @@ package com.sissi.vconfsdkdemo;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+
 import android.view.View;
 
-import com.kedacom.vconf.sdk.base.IResponseListener;
+import com.kedacom.vconf.sdk.base.IResultListener;
+import com.kedacom.vconf.sdk.base.KLog;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.bean.TerminalType;
 //import com.kedacom.vconf.sdk.utils.KLog;
@@ -20,10 +23,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void enter(View view) {
         DataCollaborateManager dataCollaborateManager = DataCollaborateManager.getInstance();
-        dataCollaborateManager.login("127.0.0.1", 6666, TerminalType.TrueLinkAndroidPhone, new IResponseListener() {
+        dataCollaborateManager.login("127.0.0.1", 6666, TerminalType.TrueLinkAndroidPhone, new IResultListener() {
+//            @Override
+//            public LifecycleOwner getLifecycleOwner() {
+//                KLog.p("getLifecycleOwner");
+//                return MainActivity.this;
+//            }
+
+            @Override
+            public void onResultArrived() {
+                KLog.p("onResultArrived");
+            }
+
             @Override
             public void onSuccess(Object result) {
-                dataCollaborateManager.createDcConf(new IResponseListener() {
+                KLog.p("onSuccess");
+                dataCollaborateManager.createDcConf(new IResultListener() {
                     @Override
                     public void onSuccess(Object result) {
                         startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
@@ -44,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailed(int errorCode) {
 
+                KLog.p("onFailed");
             }
 
             @Override
             public void onTimeout() {
 
+                KLog.p("onTimeout");
             }
         });
     }
