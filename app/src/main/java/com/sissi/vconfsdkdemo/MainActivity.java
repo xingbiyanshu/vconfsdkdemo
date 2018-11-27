@@ -10,7 +10,7 @@ import android.view.View;
 import com.kedacom.vconf.sdk.base.IResultListener;
 import com.kedacom.vconf.sdk.base.KLog;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
-import com.kedacom.vconf.sdk.datacollaborate.bean.TerminalType;
+import com.kedacom.vconf.sdk.datacollaborate.bean.ETerminalType;
 //import com.kedacom.vconf.sdk.utils.KLog;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void enter(View view) {
         DataCollaborateManager dataCollaborateManager = DataCollaborateManager.getInstance();
-        dataCollaborateManager.login("127.0.0.1", 6666, TerminalType.TrueLinkAndroidPhone, new IResultListener() {
+        dataCollaborateManager.login("127.0.0.1", 6666, ETerminalType.TrueLinkAndroidPhone, new IResultListener() {
 //            @Override
 //            public LifecycleOwner getLifecycleOwner() {
 //                KLog.p("getLifecycleOwner");
