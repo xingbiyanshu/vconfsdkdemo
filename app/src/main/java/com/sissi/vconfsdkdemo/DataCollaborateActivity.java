@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DataCollaborateActivity extends AppCompatActivity
-        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener{
+        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher {
 
     DataCollaborateManager dataCollaborateManager;
     IPaintFactory paintFactory;
@@ -52,7 +52,7 @@ public class DataCollaborateActivity extends AppCompatActivity
         boardContainer = findViewById(R.id.data_collaborate_content);
 
         KLog.p("dataCollaborateManager.setPainter");
-        dataCollaborateManager = DataCollaborateManager.getInstance();
+        dataCollaborateManager = DataCollaborateManager.getInstance(this);
         dataCollaborateManager.addBoardOpListener(this);
         dataCollaborateManager.addPaintOpListener(this);
 //        RawPainter painter = new RawPainter(this);
@@ -151,6 +151,7 @@ public class DataCollaborateActivity extends AppCompatActivity
     @Override
     public void onBoardCreated(BoardInfo boardInfo) {
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
+        paintBoard.setPublisher(this);
         painter.addPaintBoard(paintBoard);
     }
 
@@ -179,4 +180,9 @@ public class DataCollaborateActivity extends AppCompatActivity
         painter.paint(opPaint);
     }
 
+    @Override
+    public void publish(OpPaint op) {
+        KLog.p(KLog.WARN,"publish paint op %s", op);
+        dataCollaborateManager.publishPaintOp(op);
+    }
 }

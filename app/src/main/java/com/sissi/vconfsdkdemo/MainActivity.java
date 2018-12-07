@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.kedacom.vconf.sdk.base.IResultListener;
 import com.kedacom.vconf.sdk.base.KLog;
+import com.kedacom.vconf.sdk.base.basement.EmulationModeOnOff;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.bean.ETerminalType;
 //import com.kedacom.vconf.sdk.utils.KLog;
@@ -19,10 +20,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EmulationModeOnOff.enable(true);
     }
 
     public void enter(View view) {
-        DataCollaborateManager dataCollaborateManager = DataCollaborateManager.getInstance();
+//        startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
+
+
+        DataCollaborateManager dataCollaborateManager = DataCollaborateManager.getInstance(this);
         dataCollaborateManager.login("127.0.0.1", 6666, ETerminalType.TrueLinkAndroidPhone, new IResultListener() {
 //            @Override
 //            public LifecycleOwner getLifecycleOwner() {
@@ -33,27 +38,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResultArrived() {
                 KLog.p("onResultArrived");
+                startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
             }
 
             @Override
             public void onSuccess(Object result) {
                 KLog.p("onSuccess");
-                dataCollaborateManager.createDcConf(new IResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
-                    }
-
-                    @Override
-                    public void onFailed(int errorCode) {
-
-                    }
-
-                    @Override
-                    public void onTimeout() {
-
-                    }
-                });
+//                dataCollaborateManager.createDcConf(new IResultListener() {
+//                    @Override
+//                    public void onSuccess(Object result) {
+//                        startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
+//                    }
+//
+//                    @Override
+//                    public void onFailed(int errorCode) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onTimeout() {
+//
+//                    }
+//                });
             }
 
             @Override
