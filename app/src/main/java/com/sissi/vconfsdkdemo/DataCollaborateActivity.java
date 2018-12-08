@@ -156,7 +156,7 @@ public class DataCollaborateActivity extends AppCompatActivity
     public void onBoardCreated(BoardInfo boardInfo) {
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
         paintBoard.setPublisher(this);
-        painter.addPaintBoard(paintBoard);
+        painter.addPaintBoard(paintBoard, IPainter.ROLE_AUTHOR);
     }
 
     @Override
