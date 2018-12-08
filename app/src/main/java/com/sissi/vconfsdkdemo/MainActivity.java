@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 
             @Override
-            public void onResultArrived() {
+            public void onArrive() {
                 KLog.p("onResultArrived");
                 startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
             }

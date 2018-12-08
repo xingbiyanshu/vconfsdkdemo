@@ -113,19 +113,23 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onDrawLineClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCLineDrawnNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCLineDrawnNtf);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_LINE);
     }
 
     public void onDrawOvalClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCOvalDrawnNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCOvalDrawnNtf);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_OVAL);
     }
 
     public void onDrawRectClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCRectDrawnNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCRectDrawnNtf);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_RECT);
     }
 
     public void onDrawPathClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCPathDrawnNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCPathDrawnNtf);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_PENCIL);
     }
 
     public void onInsertPicClicked(View view) {
