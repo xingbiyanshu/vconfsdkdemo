@@ -109,7 +109,8 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onClearScreenClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCScreenClearedNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCScreenClearedNtf);
+        painter.getCurrentPaintBoard().clearScreen();
     }
 
     public void onDrawLineClicked(View view) {
@@ -145,11 +146,13 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onUndoClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCUndoneNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCUndoneNtf);
+        painter.getCurrentPaintBoard().undo();
     }
 
     public void onRedoClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCRedoneNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCRedoneNtf);
+        painter.getCurrentPaintBoard().redo();
     }
 
     @Override
