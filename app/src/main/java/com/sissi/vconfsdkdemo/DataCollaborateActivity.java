@@ -97,7 +97,8 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onEraseClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCRectErasedNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCRectErasedNtf);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_ERASER);
     }
 
     public void onZoominClicked(View view) {
@@ -159,7 +160,8 @@ public class DataCollaborateActivity extends AppCompatActivity
     public void onBoardCreated(BoardInfo boardInfo) {
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
         paintBoard.setPublisher(this);
-        painter.addPaintBoard(paintBoard, IPainter.ROLE_AUTHOR);
+        painter.addPaintBoard(paintBoard);
+        painter.setRole(boardInfo.getId(), IPainter.ROLE_AUTHOR);
     }
 
     @Override
