@@ -1,5 +1,7 @@
 package com.sissi.vconfsdkdemo;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -81,7 +83,15 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
 
+    static Bitmap bt;
     public void download(View view) {
+//        bt = BitmapFactory.decodeFile("/data/local/tmp/wb.png");
+        if (null == bt) {
+            painter.getCurrentPaintBoard().getBoardView().setBackgroundColor(Color.BLUE);
+            bt = painter.getCurrentPaintBoard().snapshot(IPaintBoard.LAYER_ALL);
+        }else {
+            bt = painter.getCurrentPaintBoard().snapshot(IPaintBoard.LAYER_PIC_AND_SHAPE);
+        }
     }
 
     public void onCreatePaintBoardClicked(View view) {
@@ -98,15 +108,17 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     public void onEraseClicked(View view) {
 //        dataCollaborateManager.ejectNtf(Msg.DCRectErasedNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_ERASER);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_RECT_ERASER);
     }
 
     public void onZoominClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
+        painter.getCurrentPaintBoard().zoom(100);
     }
 
     public void onZoomoutClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
+        painter.getCurrentPaintBoard().zoom(50);
     }
 
     public void onClearScreenClicked(View view) {
@@ -135,7 +147,9 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onInsertPicClicked(View view) {
-        dataCollaborateManager.ejectNtf(Msg.DCPicInsertedNtf);
+//        dataCollaborateManager.ejectNtf(Msg.DCPicInsertedNtf);
+//        bt = BitmapFactory.decodeFile("/data/local/tmp/wb.png");
+        painter.getCurrentPaintBoard().insertPic(bt);
     }
 
     public void onDeletePicClicked(View view) {
