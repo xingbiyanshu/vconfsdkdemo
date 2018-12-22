@@ -27,7 +27,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DataCollaborateActivity extends AppCompatActivity
-        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher {
+        implements DataCollaborateManager.IOnBoardOpListener,
+        DataCollaborateManager.IOnPaintOpListener,
+        IPaintBoard.IPublisher,
+        IPaintBoard.IOnRepealableStateChangedListener,
+        IPaintBoard.IOnZoomRateChangedListener,
+        IPaintBoard.IOnPictureCountChanged {
 
     DataCollaborateManager dataCollaborateManager;
     IPaintFactory paintFactory;
@@ -54,7 +59,7 @@ public class DataCollaborateActivity extends AppCompatActivity
         boardContainer = findViewById(R.id.data_collaborate_content);
 
         KLog.p("dataCollaborateManager.setPainter");
-        dataCollaborateManager = DataCollaborateManager.getInstance(this);
+        dataCollaborateManager = DataCollaborateManager.getInstance(this.getApplication());
         dataCollaborateManager.addBoardOpListener(this);
         dataCollaborateManager.addPaintOpListener(this);
 //        RawPainter painter = new RawPainter(this);
@@ -108,7 +113,7 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     public void onEraseClicked(View view) {
 //        dataCollaborateManager.ejectNtf(Msg.DCRectErasedNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_RECT_ERASER);
+        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_ERASER);
     }
 
     public void onZoominClicked(View view) {
@@ -148,8 +153,7 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     public void onInsertPicClicked(View view) {
 //        dataCollaborateManager.ejectNtf(Msg.DCPicInsertedNtf);
-//        bt = BitmapFactory.decodeFile("/data/local/tmp/wb.png");
-        painter.getCurrentPaintBoard().insertPic(bt);
+        painter.getCurrentPaintBoard().insertPic("/data/local/tmp/wb.png");
     }
 
     public void onDeletePicClicked(View view) {
@@ -173,9 +177,12 @@ public class DataCollaborateActivity extends AppCompatActivity
     @Override
     public void onBoardCreated(BoardInfo boardInfo) {
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
-        paintBoard.setPublisher(this);
         painter.addPaintBoard(paintBoard);
         painter.setRole(boardInfo.getId(), IPainter.ROLE_AUTHOR);
+        paintBoard.setPublisher(this)
+                .setOnRepealableStateChangedListener(this)
+                .setOnZoomRateChangedListener(this)
+                .setOnPictureCountChangedListener(this);
     }
 
     @Override
@@ -208,4 +215,21 @@ public class DataCollaborateActivity extends AppCompatActivity
         KLog.p(KLog.WARN,"publish paint op %s", op);
         dataCollaborateManager.publishPaintOp(op);
     }
+
+
+    @Override
+    public void onZoomRateChanged(int percentage) {
+        KLog.p(KLog.WARN,"rate= %s", percentage);
+    }
+
+    @Override
+    public void onPictureCountChanged(int count) {
+        KLog.p(KLog.WARN,"count= %s", count);
+    }
+
+    @Override
+    public void onRepealableStateChanged(int repealedOpsCount, int remnantOpsCount) {
+        KLog.p(KLog.WARN,"repealedOpsCount=%s, remnantOpsCount=%s", repealedOpsCount, remnantOpsCount);
+    }
+
 }

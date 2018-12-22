@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
 
 
-        DataCollaborateManager dataCollaborateManager = DataCollaborateManager.getInstance(this);
+        DataCollaborateManager dataCollaborateManager = DataCollaborateManager.getInstance(this.getApplication());
         dataCollaborateManager.login("127.0.0.1", 6666, ETerminalType.TrueLinkAndroidPhone, new IResultListener() {
 //            @Override
 //            public LifecycleOwner getLifecycleOwner() {
