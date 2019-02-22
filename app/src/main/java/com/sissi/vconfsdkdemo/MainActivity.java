@@ -47,13 +47,24 @@ public class MainActivity extends AppCompatActivity {
 
         dataCollaborateManager.login("127.0.0.1", 6666, ETerminalType.TrueLinkAndroidPhone,
                 new IResultListener() {
+                    @Override
+                    public void onArrive() {
 
-            @Override
+                        KLog.p("login onArrive");
+                    }
+
+                    @Override
             public void onSuccess(Object result) {
                 KLog.p("onSuccess");
                 dataCollaborateManager.createDcConf("confE164", "confName", EDcMode.Auto, EConfType.MCC, "adminE164", null,
                         new IResultListener() {
-                    @Override
+                            @Override
+                            public void onArrive() {
+
+                                KLog.p("create conf onArrive");
+                            }
+
+                            @Override
                     public void onSuccess(Object result) {
                         startActivity(new Intent(MainActivity.this, DataCollaborateActivity.class));
                     }

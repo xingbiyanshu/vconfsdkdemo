@@ -169,7 +169,8 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onCreatePaintBoardClicked(View view) {
-        dataCollaborateManager.newBoard("mye164", new IResultListener() {
+        dataCollaborateManager.newBoard("e164", new IResultListener() {
+
             @Override
             public void onSuccess(Object result) {
                 KLog.p("newBoard success");
@@ -190,6 +191,7 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     public void onDeletePaintBoardClicked(View view) {
         dataCollaborateManager.delBoard("board", new IResultListener() {
+
             @Override
             public void onSuccess(Object result) {
                 KLog.p("del board success");
@@ -213,6 +215,7 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     public void onSwitchPaintBoardClicked(View view) {
         dataCollaborateManager.switchBoard("board", new IResultListener() {
+
             @Override
             public void onSuccess(Object result) {
                 KLog.p("switch board success");
@@ -237,20 +240,20 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     public void onZoominClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
-        painter.getCurrentPaintBoard().zoom(100);
+//        dataCollaborateManager.setDcServerAddr();
+//        painter.getCurrentPaintBoard().zoom(100);
     }
 
     public void onZoomoutClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCFullScreenMatrixOpNtf);
-        painter.getCurrentPaintBoard().zoom(50);
+//        Object obj = dataCollaborateManager.getDcServerAddr();
+//        painter.getCurrentPaintBoard().zoom(50);
     }
 
     public void onClearScreenClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCScreenClearedNtf);
+        dataCollaborateManager.eject(Msg.DCScreenClearedNtf);
 //        painter.getCurrentPaintBoard().clearScreen();
-        OpClearScreen opClearScreen = new OpClearScreen();
-        opClearScreen.setBoardId("boardId");
+//        OpClearScreen opClearScreen = new OpClearScreen();
+//        opClearScreen.setBoardId("boardId");
 //        painter.paint(opClearScreen);
     }
 
@@ -359,8 +362,13 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPaintOp(List<OpPaint> ops) {
-        painter.paint(ops);
+    public void onPaint(OpPaint op) {
+        painter.paint(op);
+    }
+
+    @Override
+    public void onBatchPaint(List<OpPaint> ops) {
+        painter.batchPaint(ops);
     }
 
 //
