@@ -1,51 +1,35 @@
 package com.sissi.vconfsdkdemo;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.PointF;
-import android.graphics.RectF;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.kedacom.vconf.sdk.base.IResultListener;
 import com.kedacom.vconf.sdk.base.KLog;
 import com.kedacom.vconf.sdk.base.Msg;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.DefaultPaintFactory;
-import com.kedacom.vconf.sdk.datacollaborate.DefaultPainter;
 import com.kedacom.vconf.sdk.datacollaborate.IPaintBoard;
 import com.kedacom.vconf.sdk.datacollaborate.IPaintFactory;
 import com.kedacom.vconf.sdk.datacollaborate.IPainter;
 import com.kedacom.vconf.sdk.datacollaborate.bean.BoardInfo;
-import com.kedacom.vconf.sdk.datacollaborate.bean.OpClearScreen;
 import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Environment;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DataCollaborateActivity extends AppCompatActivity
-        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher/*, IPaintBoard.IOnRepealableStateChangedListener, IPaintBoard.IOnZoomRateChangedListener, IPaintBoard.IOnPictureCountChanged*/ {
+        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher {
 
-    DataCollaborateManager dataCollaborateManager;
+    DataCollaborateManager dm;
     IPaintFactory paintFactory;
     IPainter painter;
 
@@ -58,11 +42,11 @@ public class DataCollaborateActivity extends AppCompatActivity
 
         boardContainer = findViewById(R.id.data_collaborate_content);
 
-        dataCollaborateManager = DataCollaborateManager.getInstance(this.getApplication());
+        dm = DataCollaborateManager.getInstance(this.getApplication());
         // 监听画板操作通知（添加/删除/切换画板）
-        dataCollaborateManager.addBoardOpListener(this);
+        dm.addBoardOpListener(this);
         // 监听画板绘制操作
-        dataCollaborateManager.addPaintOpListener(this);
+        dm.addPaintOpListener(this);
 
         // 创建默认绘制工厂以创建画师和画板
         /*
@@ -116,10 +100,10 @@ public class DataCollaborateActivity extends AppCompatActivity
 
 
     /**
-     * 作为协作方主动创建画板
+     * 创建画板
      * */
-    public void onCreatePaintBoardClicked(View view) {
-        dataCollaborateManager.newBoard("e164", new IResultListener() {
+    public void onNewBoardClicked(View view) {
+        dm.newBoard("e164", new IResultListener() {
 
             @Override
             public void onSuccess(Object result) {
@@ -140,36 +124,10 @@ public class DataCollaborateActivity extends AppCompatActivity
     }
 
     /**
-     * 作为协作方主动删除画板
+     * 切换画板
      * */
-    public void onDeletePaintBoardClicked(View view) {
-        dataCollaborateManager.delBoard("board", new IResultListener() {
-
-            @Override
-            public void onSuccess(Object result) {
-                KLog.p("del board success");
-                delBoard((String) result);
-            }
-
-            @Override
-            public void onFailed(int errorCode) {
-                KLog.p("del board success");
-
-            }
-
-            @Override
-            public void onTimeout() {
-                KLog.p("del board success");
-
-            }
-        });
-    }
-
-    /**
-     * 作为协作方主动切换画板
-     * */
-    public void onSwitchPaintBoardClicked(View view) {
-        dataCollaborateManager.switchBoard("board", new IResultListener() {
+    public void onSwitchBoardClicked(View view) {
+        dm.switchBoard("board", new IResultListener() {
 
             @Override
             public void onSuccess(Object result) {
@@ -189,74 +147,209 @@ public class DataCollaborateActivity extends AppCompatActivity
         });
     }
 
-    public void onEraseClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCRectErasedNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_RECT_ERASER);
+
+    /**
+     * 删除画板
+     * */
+    public void onDelBoardClicked(View view) {
+        dm.delBoard("board", new IResultListener() {
+
+            @Override
+            public void onSuccess(Object result) {
+                KLog.p("del board success");
+                delBoard((String) result);
+            }
+
+            @Override
+            public void onFailed(int errorCode) {
+                KLog.p("del board failed");
+
+            }
+
+            @Override
+            public void onTimeout() {
+                KLog.p("del board timeout");
+
+            }
+        });
     }
 
-    public void onZoominClicked(View view) {
-//        dataCollaborateManager.setDcServerAddr();
-//        painter.getCurrentPaintBoard().zoom(100);
+
+    /**
+     * 删除所有画板
+     * */
+    public void onDelAllBoardsClicked(View view) {
+        dm.delAllBoard(new IResultListener() {
+            @Override
+            public void onSuccess(Object result) {
+                KLog.p("del all boards success");
+            }
+
+            @Override
+            public void onFailed(int errorCode) {
+                KLog.p("del all boards failed");
+            }
+
+            @Override
+            public void onTimeout() {
+                KLog.p("del all boards timeout");
+            }
+        });
     }
 
-    public void onZoomoutClicked(View view) {
-//        Object obj = dataCollaborateManager.getDcServerAddr();
-//        painter.getCurrentPaintBoard().zoom(50);
+
+
+    /**
+     * 设置画线工具
+     * */
+    public void onLineClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_LINE);
     }
 
+    /**
+     * 设置画圆工具
+     * */
+    public void onOvalClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_OVAL);
+    }
+
+    /**
+     * 设置画矩形工具
+     * */
+    public void onRectClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_RECT);
+    }
+
+    /**
+     * 设置画任意曲线工具
+     * */
+    public void onPathClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_PENCIL);
+    }
+
+    /**
+     * 设置擦除工具
+     * */
+    public void onEraserClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_RECT_ERASER);
+    }
+
+
+
+    /**
+     * 撤销
+     * */
+    public void onUndoClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.undo();
+    }
+    /**
+     * 恢复
+     * */
+    public void onRedoClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.redo();
+    }
+    /**
+     * 清屏
+     * */
     public void onClearScreenClicked(View view) {
-        dataCollaborateManager.eject(Msg.DCScreenClearedNtf);
-//        painter.getCurrentPaintBoard().clearScreen();
-//        OpClearScreen opClearScreen = new OpClearScreen();
-//        opClearScreen.setBoardId("boardId");
-//        painter.paint(opClearScreen);
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.clearScreen();
     }
 
-    public void onDrawLineClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCLineDrawnNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_LINE);
-    }
 
-    public void onDrawOvalClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCOvalDrawnNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_OVAL);
-    }
 
-    public void onDrawRectClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCRectDrawnNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_RECT);
-    }
-
-    public void onDrawPathClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCPathDrawnNtf);
-        painter.getCurrentPaintBoard().setTool(IPaintBoard.TOOL_PENCIL);
-    }
-
+    /**
+     * 插入图片
+     * */
     public void onInsertPicClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCPicInsertedNtf);
+//        dm.ejectNtf(Msg.DCPicInsertedNtf);
 //        bt = BitmapFactory.decodeFile("/data/local/tmp/wb.png");
 //        painter.getCurrentPaintBoard().insertPic("/data/local/tmp/Penguins.jpg");
         KLog.p("filePath=%s", filePath);
         painter.getCurrentPaintBoard().insertPic(filePath);
     }
 
-    public void onDeletePicClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCPicDeletedNtf);
+    /**
+     * 快照
+     * */
+    public void onSnapshotClicked(View view) {
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard) curBoard.snapshot(IPaintBoard.AREA_ALL, 0, 0, new IPaintBoard.ISnapshotResultListener() {
+            @Override
+            public void onResult(Bitmap bitmap) {
+
+            }
+        });
     }
 
-    public void onMovePic(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCPicDraggedNtf);
+
+
+
+    /**
+     * 收到其他协作方创建画板的通知
+     * */
+    @Override
+    public void onBoardCreated(BoardInfo boardInfo) {
+        KLog.p("onBoardCreated");
+        createBoard(boardInfo);
     }
 
-    public void onUndoClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCUndoneNtf);
-        painter.getCurrentPaintBoard().undo();
+    /**
+     * 收到其他协作方删除画板的通知
+     * */
+    @Override
+    public void onBoardDeleted(String boardId) {
+        delBoard(boardId);
     }
 
-    public void onRedoClicked(View view) {
-//        dataCollaborateManager.ejectNtf(Msg.DCRedoneNtf);
-        painter.getCurrentPaintBoard().redo();
+    /**
+     * 收到其他协作方切换画板的通知
+     * */
+    @Override
+    public void onBoardSwitched(String boardId) {
+        switchBoard(boardId);
     }
+
+    /**
+     * 收到其他协作方删除所有画板的通知
+     * */
+    @Override
+    public void onAllBoardDeleted() {
+
+    }
+
+    /**
+     * 发布绘制操作
+     * */
+    @Override
+    public void publish(OpPaint op) {
+        KLog.p("publish paint op %s", op);
+//        dm.publishPaintOp(op);
+    }
+
+    /**
+     * 收到绘制操作
+     * */
+    @Override
+    public void onPaint(OpPaint op) {
+        // 将绘制操作交由painter处理
+        painter.paint(op);
+    }
+
+    @Override
+    public void onBatchPaint(List<OpPaint> ops) {
+        painter.batchPaint(ops);
+    }
+
+
+
 
     private void createBoard(BoardInfo boardInfo){
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
@@ -288,57 +381,5 @@ public class DataCollaborateActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onBoardCreated(BoardInfo boardInfo) {
-        KLog.p("onBoardCreated");
-        createBoard(boardInfo);
-    }
 
-    @Override
-    public void onBoardDeleted(String boardId) {
-        delBoard(boardId);
-    }
-
-    @Override
-    public void onBoardSwitched(String boardId) {
-        switchBoard(boardId);
-    }
-
-    @Override
-    public void onAllBoardDeleted() {
-
-    }
-
-
-    @Override
-    public void publish(OpPaint op) {
-        KLog.p(KLog.WARN,"publish paint op %s", op);
-//        dataCollaborateManager.publishPaintOp(op);
-    }
-
-    @Override
-    public void onPaint(OpPaint op) {
-        painter.paint(op);
-    }
-
-    @Override
-    public void onBatchPaint(List<OpPaint> ops) {
-        painter.batchPaint(ops);
-    }
-
-//
-//    @Override
-//    public void onZoomRateChanged(int percentage) {
-//
-//    }
-//
-//    @Override
-//    public void onPictureCountChanged(int count) {
-//
-//    }
-//
-//    @Override
-//    public void onRepealableStateChanged(int repealedOpsCount, int remnantOpsCount) {
-//
-//    }
 }
