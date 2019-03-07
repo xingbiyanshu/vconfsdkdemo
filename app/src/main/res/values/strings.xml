@@ -1,16 +1,10 @@
 <resources>
     <string name="app_name">vconfsdkdemo</string>
 
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="welcome">welcome</string>
-    <string name="login">login</string>
-    <string name="enter">enter</string>
     <string name="data_collaborate">data_collaborate</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_data_collaborate">DataCollaborateActivity</string>
 </resources>

@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".DataCollaborateActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <include
         layout="@layout/content_data_collaborate" />
@@ -27,7 +14,8 @@
         android:id="@+id/tools_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        tools:ignore="HardcodedText" >
 
         <Button
             android:id="@+id/create_paintboard"
@@ -36,7 +24,7 @@
             android:onClick="onCreatePaintBoardClicked"
             android:text="new_pb"
             app:layout_constraintBottom_toTopOf="@+id/op_drawline"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <Button
             android:id="@+id/switch_paintboard"
@@ -203,10 +191,11 @@
             android:id="@+id/button9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
             android:text="Button"
             app:layout_constraintBaseline_toBaselineOf="@+id/button8"
-            app:layout_constraintEnd_toEndOf="@+id/op_movepic" />
+            app:layout_constraintEnd_toEndOf="@+id/op_movepic"
+            tools:ignore="RtlHardcoded" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

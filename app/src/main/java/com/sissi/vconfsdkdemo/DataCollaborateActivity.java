@@ -55,79 +55,25 @@ public class DataCollaborateActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collaborate);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
 
         boardContainer = findViewById(R.id.data_collaborate_content);
 
-        KLog.p("dataCollaborateManager.setPainter");
         dataCollaborateManager = DataCollaborateManager.getInstance(this.getApplication());
+        // 监听画板操作通知（添加/删除/切换画板）
         dataCollaborateManager.addBoardOpListener(this);
+        // 监听画板绘制操作
         dataCollaborateManager.addPaintOpListener(this);
 
+        // 创建默认绘制工厂以创建画师和画板
+        /*
+        * 传入DefaultPaintFactory()的DataCollaborateActivity实例为生命周期拥有者（LifecycleOwner实例）
+        * 所以工厂创建出的画师和画板生命周期和该DataCollaborateActivity实例绑定，用户无需手动管理。
+        * （详见SDK说明）
+        * */
         paintFactory = new DefaultPaintFactory(this);
+
+        // 创建画师
         painter = paintFactory.createPainter();
-
-        // DEBUG
-//        RectF rect1 = new RectF(10, 10, 20, 30);
-//        RectF rect2 = new RectF(10, 10, 20, 30);
-//        RectF rect3 = new RectF(10, 10, 40, 70);
-//        Matrix transMatrix1 = calcTransMatrix(rect1, rect2);
-//        Matrix transMatrix2 = calcTransMatrix(rect1, rect3);
-//        RectF rect12 = new RectF();
-//        RectF rect13 = new RectF();
-//        transMatrix1.mapRect(rect12, rect1);
-//        transMatrix2.mapRect(rect13, rect1);
-//        KLog.p("transMatrix1=%s, transMatrix2=%s, \nrect1=%s, rect2=%s, rect3=%s, rect12=%s, rect13=%s",
-//                transMatrix1, transMatrix2, rect1, rect2, rect3, rect12, rect13);
-//
-//        PointF pointF = new PointF(448, 0); // 100%时的插入点
-//        float[] mappedPoint = new float[]{pointF.x, pointF.y};
-//        Matrix matrix1 = new Matrix();
-//        Matrix matrix2 = new Matrix();
-//        Matrix invertedMatrix1 = new Matrix();
-//        Matrix invertedMatrix2 = new Matrix();
-//        matrix1.postTranslate(10, 10);
-//        matrix2.postTranslate(30, 30);
-//        matrix1.mapRect(rect1);
-//        matrix2.mapRect(rect2);
-//        matrix1.invert(invertedMatrix1);
-//        matrix2.postConcat(invertedMatrix1);
-//        invertedMatrix1.mapRect(rect3);
-//        KLog.p("matrix1=%s, matrix2=%s, invertedMatrix1=%s, rect1=%s, rect2=%s, rect3=%s",
-//                matrix1, matrix2, invertedMatrix1, rect1, rect2, rect3);
-
-//
-//        matrix1.postScale(0.5f, 0.5f, 960, 540); // 全屏缩放为50%后的matrix
-//        matrix1.invert(invertedMatrix1);
-//        invertedMatrix1.invert(invertedMatrix2);
-//        invertedMatrix1.mapPoints(mappedPoint);  // 适应全屏缩放50%后的插入点，使得实际插入的位置跟见到位置一致。
-//        float[] vals = new float[]{0.6666667f, 0.0f, 161.33334f, 0.0f, 0.6666667f, 223.54288f, 0.0f, 0.0f, 1.0f};
-//        matrix1.setValues(vals);
-//        float[] x = new float[]{0, 0};
-//        matrix1.mapPoints(x);
-//        KLog.p("matrix1=%s, mappedPoints=[%s, %s]", matrix1, x[0], x[1]);
-//        matrix1.mapPoints(mappedPoint);
-//        KLog.p("after 0.5scaled matrix=%s, invertedMatrix1=%s, invert mappedPoints=[%s, %s]", matrix1, invertedMatrix1, mappedPoint[0], mappedPoint[1]);
-//        matrix2.postTranslate(40, 40);
-//        matrix2.postScale(2, 2);
-//        matrix1.mapPoints(mappedPoint);
-//        Matrix matrix2DivMatrix1 = new Matrix(matrix2);
-//        matrix2DivMatrix1.postConcat(invertedMatrix1);
-//        KLog.p("matrix1=%s, matrix2=%s, matrix2DivMatrix1=%s, \npoint=%s, matrix1MappedPoint=[%s,%s]\ninvertedMatrix1=%s, invertedMatrix2=%s",
-//                matrix1, matrix2, matrix2DivMatrix1, pointF, mappedPoint[0], mappedPoint[1], invertedMatrix1, invertedMatrix2);
-//        Matrix matrix1ConcatMatrix2 = new Matrix(matrix1);
-//        matrix1ConcatMatrix2.postConcat(matrix2);
-//        Matrix matrix2ConcatMatrix1 = new Matrix(matrix2);
-//        matrix2ConcatMatrix1.postConcat(matrix1);
-//        KLog.p("matrix1=%s, matrix2=%s, \nmatrix1ConcatMatrix2=%s, matrix2ConcatMatrix1=%s", matrix1, matrix2, matrix1ConcatMatrix2, matrix2ConcatMatrix1);
-//
-//        Matrix matrix1XMatrix2XInvertedMatrix2 = new Matrix(matrix1ConcatMatrix2);
-//        matrix1XMatrix2XInvertedMatrix2.postConcat(invertedMatrix2);
-//        Matrix matrix1XMatrix2XInvertedMatrix1 = new Matrix(matrix1ConcatMatrix2);
-//        matrix1XMatrix2XInvertedMatrix1.postConcat(invertedMatrix1);
-//        KLog.p("matrix1XMatrix2XInvertedMatrix2=%s, matrix1XMatrix2XInvertedMatrix1=%s", matrix1XMatrix2XInvertedMatrix2, matrix1XMatrix2XInvertedMatrix1);
 
     }
 
@@ -142,9 +88,9 @@ public class DataCollaborateActivity extends AppCompatActivity
 //        }else {
 //            bt = painter.getCurrentPaintBoard().snapshot(IPaintBoard.LAYER_PIC_AND_SHAPE);
 //        }
-        painter.getCurrentPaintBoard().save(new IPaintBoard.ISaveListener() {
+        painter.getCurrentPaintBoard().snapshot(IPaintBoard.AREA_ALL, 0, 0, new IPaintBoard.ISnapshotResultListener() {
             @Override
-            public void onFinish(Bitmap bitmap) {
+            public void onResult(Bitmap bitmap) {
                 bt = bitmap;
                 File file = new File(Environment.getExternalStorageDirectory(), "snapshot.png");
                 filePath = file.getPath();
@@ -168,6 +114,10 @@ public class DataCollaborateActivity extends AppCompatActivity
 
     }
 
+
+    /**
+     * 作为协作方主动创建画板
+     * */
     public void onCreatePaintBoardClicked(View view) {
         dataCollaborateManager.newBoard("e164", new IResultListener() {
 
@@ -189,6 +139,9 @@ public class DataCollaborateActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * 作为协作方主动删除画板
+     * */
     public void onDeletePaintBoardClicked(View view) {
         dataCollaborateManager.delBoard("board", new IResultListener() {
 
@@ -212,7 +165,9 @@ public class DataCollaborateActivity extends AppCompatActivity
         });
     }
 
-
+    /**
+     * 作为协作方主动切换画板
+     * */
     public void onSwitchPaintBoardClicked(View view) {
         dataCollaborateManager.switchBoard("board", new IResultListener() {
 
@@ -309,6 +264,15 @@ public class DataCollaborateActivity extends AppCompatActivity
         painter.addPaintBoard(paintBoard); // 创建画板并添加给painter管理。
     }
 
+    private void delBoard(String boardId){
+        // 从painter删除该画板
+        IPaintBoard paintBoard = painter.deletePaintBoard(boardId);
+        if (null != paintBoard){
+            // 从界面View树中移除该画板
+            boardContainer.removeView(paintBoard.getBoardView());
+        }
+    }
+
     private void switchBoard(String boardId){
         IPaintBoard curPaintBoard = painter.getCurrentPaintBoard();
         // painter切换到目标画板
@@ -321,15 +285,6 @@ public class DataCollaborateActivity extends AppCompatActivity
             // view树中添加目标画板
             boardContainer.addView(switchToPaintBoard.getBoardView(),
                     new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        }
-    }
-
-    private void delBoard(String boardId){
-        // 从painter删除该画板
-        IPaintBoard paintBoard = painter.deletePaintBoard(boardId);
-        if (null != paintBoard){
-            // 从界面View树中移除该画板
-            boardContainer.removeView(paintBoard.getBoardView());
         }
     }
 

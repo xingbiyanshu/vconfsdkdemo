@@ -17,19 +17,15 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenLocal()
+//        mavenLocal()
         google()
         jcenter()
 
+        // 数据协作sdk所在仓库
+        maven {
+            url "http://172.16.6.154:9081/repository/releases/"
+        }
 
-//        flatDir{
-//            dirs 'libs'
-//        }
-
-//        maven {
-////            url "http://localhost:8081/repository/maven-releases/"
-//            url "http://127.0.0.1:8081/repository/maven-snapshots/"
-//        }
     }
 }
 
