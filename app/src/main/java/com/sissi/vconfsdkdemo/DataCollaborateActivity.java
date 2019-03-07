@@ -17,8 +17,10 @@ import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Environment;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -109,6 +111,7 @@ public class DataCollaborateActivity extends AppCompatActivity
             public void onSuccess(Object result) {
                 KLog.p("newBoard success");
                 createBoard((BoardInfo) result);
+                showToast("已创建画板"+((BoardInfo)result).getId());
             }
 
             @Override
@@ -133,6 +136,9 @@ public class DataCollaborateActivity extends AppCompatActivity
             public void onSuccess(Object result) {
                 KLog.p("switch board success");
                 switchBoard((String) result);
+                IPaintBoard curBoard = painter.getCurrentPaintBoard();
+                String curBoardId = null != curBoard ? curBoard.getBoardId() : "null";
+                showToast("已由画板"+curBoardId+"切换到画板"+result);
             }
 
             @Override
@@ -158,12 +164,12 @@ public class DataCollaborateActivity extends AppCompatActivity
             public void onSuccess(Object result) {
                 KLog.p("del board success");
                 delBoard((String) result);
+                showToast("已删除画板"+result);
             }
 
             @Override
             public void onFailed(int errorCode) {
                 KLog.p("del board failed");
-
             }
 
             @Override
@@ -183,6 +189,10 @@ public class DataCollaborateActivity extends AppCompatActivity
             @Override
             public void onSuccess(Object result) {
                 KLog.p("del all boards success");
+                for (IPaintBoard board : painter.getAllPaintBoards()){
+                    delBoard(board.getBoardId());
+                }
+                showToast("已删除所有画板");
             }
 
             @Override
@@ -331,7 +341,7 @@ public class DataCollaborateActivity extends AppCompatActivity
     @Override
     public void publish(OpPaint op) {
         KLog.p("publish paint op %s", op);
-//        dm.publishPaintOp(op);
+        dm.publishPaintOp(op);
     }
 
     /**
@@ -381,5 +391,11 @@ public class DataCollaborateActivity extends AppCompatActivity
         }
     }
 
+
+    void showToast(String content){
+        Toast toast = Toast.makeText(this, content, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
 
 }
