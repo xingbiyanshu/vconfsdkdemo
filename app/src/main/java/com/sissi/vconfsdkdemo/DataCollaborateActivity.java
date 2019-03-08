@@ -1,5 +1,6 @@
 package com.sissi.vconfsdkdemo;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -14,9 +15,10 @@ import com.kedacom.vconf.sdk.datacollaborate.IPainter;
 import com.kedacom.vconf.sdk.datacollaborate.bean.BoardInfo;
 import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,19 +30,37 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class DataCollaborateActivity extends AppCompatActivity
-        implements DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher {
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 
-    DataCollaborateManager dm;
-    IPaintFactory paintFactory;
-    IPainter painter;
 
-    ViewGroup boardContainer;
+public class DataCollaborateActivity extends Activity // 继承的该Activity不是LifecycleOwner实例
+        /* 针对未使用support库或androidx库中的已实现LifecycleOwner接口的Activity的情形，
+        自己实现LifecycleOwner使得该Activity成为“生命周期拥有者”（LifecycleOwner实例），
+        配合SDK用以自动管理监听器的生命周期*/
+        implements LifecycleOwner,
+
+        DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher {
+
+    private DataCollaborateManager dm;
+    private IPaintFactory paintFactory;
+    private IPainter painter;
+
+    private ViewGroup boardContainer;
+
+    // 生命周期注册器
+    private LifecycleRegistry lifecycleRegistry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collaborate);
+
+        // 需在注册监听器之前创建，否则绑定生命周期会失败
+        lifecycleRegistry = new LifecycleRegistry(this);
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE); // LifecycleObserver将收到onCreate回调
 
         boardContainer = findViewById(R.id.data_collaborate_content);
 
@@ -57,47 +77,33 @@ public class DataCollaborateActivity extends AppCompatActivity
         * （详见SDK说明）
         * */
         paintFactory = new DefaultPaintFactory(this);
-
-        // 创建画师
         painter = paintFactory.createPainter();
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME); // LifecycleObserver将收到onResume回调
+    }
 
-    static Bitmap bt;
-    static String filePath;
-    public void download(View view) {
-//        bt = BitmapFactory.decodeFile("/data/local/tmp/wb.png");
-//        if (null == bt) {
-//            painter.getCurrentPaintBoard().getBoardView().setBackgroundColor(Color.BLUE);
-//            bt = painter.getCurrentPaintBoard().snapshot(IPaintBoard.LAYER_ALL);
-//        }else {
-//            bt = painter.getCurrentPaintBoard().snapshot(IPaintBoard.LAYER_PIC_AND_SHAPE);
-//        }
-        painter.getCurrentPaintBoard().snapshot(IPaintBoard.AREA_ALL, 0, 0, new IPaintBoard.ISnapshotResultListener() {
-            @Override
-            public void onResult(Bitmap bitmap) {
-                bt = bitmap;
-                File file = new File(Environment.getExternalStorageDirectory(), "snapshot.png");
-                filePath = file.getPath();
-                KLog.p("filePath=%s", filePath);
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(file);
-                    //通过io流的方式来压缩保存图片
-                    boolean isSuccess = bt.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    fos.flush();
-                    fos.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE); // LifecycleObserver将收到onPause回调
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY); // LifecycleObserver将收到onDestroy回调
+    }
 
 
-
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return lifecycleRegistry;
     }
 
 
@@ -279,22 +285,37 @@ public class DataCollaborateActivity extends AppCompatActivity
      * 插入图片
      * */
     public void onInsertPicClicked(View view) {
-//        dm.ejectNtf(Msg.DCPicInsertedNtf);
-//        bt = BitmapFactory.decodeFile("/data/local/tmp/wb.png");
-//        painter.getCurrentPaintBoard().insertPic("/data/local/tmp/Penguins.jpg");
         KLog.p("filePath=%s", filePath);
-        painter.getCurrentPaintBoard().insertPic(filePath);
+        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+        if (null != curBoard
+                && null != filePath
+                && new File(filePath).exists()) curBoard.insertPic(filePath);
     }
 
+    private static String filePath;
     /**
      * 快照
      * */
     public void onSnapshotClicked(View view) {
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.snapshot(IPaintBoard.AREA_ALL, 0, 0, new IPaintBoard.ISnapshotResultListener() {
+        if (null != curBoard) curBoard.snapshot(IPaintBoard.AREA_WINDOW, 0, 0, new IPaintBoard.ISnapshotResultListener() {
             @Override
             public void onResult(Bitmap bitmap) {
-
+                File file = new File(Environment.getExternalStorageDirectory(), "snapshot.png");
+                filePath = file.getPath();
+                KLog.p("filePath=%s", filePath);
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(file);
+                    boolean bSuccess = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                    showToast("截图保存在"+file.getPath());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -341,7 +362,7 @@ public class DataCollaborateActivity extends AppCompatActivity
     @Override
     public void publish(OpPaint op) {
         KLog.p("publish paint op %s", op);
-        dm.publishPaintOp(op);
+//        dm.publishPaintOp(op);
     }
 
     /**
@@ -397,5 +418,6 @@ public class DataCollaborateActivity extends AppCompatActivity
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
+
 
 }

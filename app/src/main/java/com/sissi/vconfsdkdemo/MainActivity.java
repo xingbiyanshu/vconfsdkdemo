@@ -2,7 +2,6 @@ package com.sissi.vconfsdkdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
@@ -13,7 +12,9 @@ import com.kedacom.vconf.sdk.datacollaborate.bean.EConfType;
 import com.kedacom.vconf.sdk.datacollaborate.bean.EDcMode;
 import com.kedacom.vconf.sdk.datacollaborate.bean.ETerminalType;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.fragment.app.FragmentActivity;
+
+public class MainActivity extends FragmentActivity {
 
     DataCollaborateManager dataCollaborateManager;
 
