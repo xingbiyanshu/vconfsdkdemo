@@ -47,7 +47,6 @@
             android:id="@+id/del_all_boards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onDelAllBoardsClicked"
             android:text="del_all"
             app:layout_constraintBaseline_toBaselineOf="@id/delete_board"
             app:layout_constraintLeft_toRightOf="@id/delete_board"

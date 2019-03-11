@@ -54,6 +54,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
 
     private Button newBoardBtn;
     private Button switchBoardBtn;
+    private Button delAllBoardsBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,11 +72,12 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
             @Override
             public void onClick(View v) {
                 /*
-                * 结果监听器使用方式1：使用成员变量的方式传入监听器。（适用于需要频繁多次使用的情形）
+                * 结果监听器使用示例1：使用成员变量的方式传入监听器。
                 *
-                * 尽管此处上下文的直接外部类是OnClickListener，非LifecycleOwner，但是newBoardResultListener
-                * 的生命周期仍和DataCollaborateActivity绑定，因为决定结果监听器绑定关系的不是使用时的上下文环境，
-                * 而是定义时的上下文环境。
+                * 此种情形下监听器的生命周期绑定情形取决于监听器定义时的上下文环境。
+                * 比如，尽管此处的直接外部类是OnClickListener，非LifecycleOwner，但是newBoardResultListener
+                * 的生命周期仍和DataCollaborateActivity绑定，无需用户手动管理，
+                * 因为newBoardResultListener定义时的直接外部类是LifecycleOwner对象——DataCollaborateActivity
                 * */
                 dm.newBoard("e164", newBoardResultListener);
             }
@@ -87,10 +89,11 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
             @Override
             public void onClick(View v) {
                 /*
-                * 结果监听器使用方式2：直接传入匿名内部类实例。（一次性的监听器使用该方式比较方便）
+                * 结果监听器使用示例2：直接传入匿名内部类实例，且其直接外部类对象不为LifecycleOwner也没有绑定到LifecycleOwner，用户手动指定生命周期绑定对象。
                 *
                 * 不同于使用成员变量的方式，此处的结果监听器“定义”时的直接外部类是OnClickListener，非LifecycleOwner，
-                * 所以该结果监听器不能自动绑定到DataCollaborateActivity，可以通过getLifecycleOwner手动绑定。
+                * 且该OnClickListener未绑定到LifecycleOwner所以该结果监听器不能自动绑定生命周期，
+                * 可以通过getLifecycleOwner手动绑定。
                 * */
                 dm.switchBoard("board", new IResultListener() {
 
@@ -126,6 +129,48 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         });
 
 
+
+        delAllBoardsBtn = findViewById(R.id.del_all_boards);
+        delAllBoardsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                * 结果监听器使用示例4：直接传入匿名内部类实例且该监听器没有绑定的生命周期对象，用户手动管理监听器生命周期。
+                *
+                * 此处的结果监听器“定义”时的直接外部类是OnClickListener，非LifecycleOwner，
+                * 且该OnClickListener未绑定到LifecycleOwner所以该结果监听器不能自动绑定生命周期，
+                * 并且用户也没通过getLifecycleOwner手动绑定，所以该监听器的生命周期没绑定到任何对象，需用户手动管理。
+                * 用户至少需要在DataCollaborateActivity.onDestroy时注销该监听器。
+                *
+                * NOTE：不论生命周期绑定情形如何，SDK会在反馈结果后注销掉监听器（即onSuccess/onFailed/onTimeout回调结束后），
+                * 但是在此之前如果界面销毁则可能引发异常，用户需要手动管理主要是针对这种场景。
+                * */
+                if (null == delAllBoardsResultListener){
+                    delAllBoardsResultListener = new IResultListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            KLog.p("del all boards success");
+                            for (IPaintBoard board : painter.getAllPaintBoards()){
+                                delBoard(board.getBoardId());
+                            }
+                            showToast("已删除所有画板");
+                        }
+
+                        @Override
+                        public void onFailed(int errorCode) {
+                            KLog.p("del all boards failed");
+                        }
+
+                        @Override
+                        public void onTimeout() {
+                            KLog.p("del all boards timeout");
+                        }
+                    };
+                }
+                dm.delAllBoard(delAllBoardsResultListener);
+            }
+        });
+
         dm = DataCollaborateManager.getInstance(this.getApplication());
         // 监听画板操作通知（添加/删除/切换画板）
         dm.addBoardOpListener(this);
@@ -159,6 +204,9 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
     protected void onDestroy() {
         super.onDestroy();
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY); // LifecycleObserver将收到onDestroy回调
+
+        // 用户手动管理“删除所有画板”结果监听器
+        dm.delListener(delAllBoardsResultListener);
     }
 
 
@@ -177,7 +225,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * 所以该监听器的生命周期自动和DataCollaborateActivity的绑定——在DataCollaborateActivity销毁时
      * 该监听器自动注销无需用户手动处理。
      * */
-    IResultListener newBoardResultListener = new IResultListener() {
+    private IResultListener newBoardResultListener = new IResultListener() {
 
         @Override
         public void onSuccess(Object result) {
@@ -255,6 +303,11 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * 删除画板
      * */
     public void onDelBoardClicked(View view) {
+        /*
+        * 结果监听器使用示例3：直接传入匿名内部类实例，该监听器的直接外部类为LifecycleOwner或者已经绑定到LifecycleOwner。
+        *
+        * 此种情形下该监听器生命周期自动绑定到该LifecycleOwner，无需用户手动管理。
+        * */
         dm.delBoard("board", new IResultListener() {
 
             @Override
@@ -277,32 +330,33 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         });
     }
 
+    private IResultListener delAllBoardsResultListener;
 
-    /**
-     * 删除所有画板
-     * */
-    public void onDelAllBoardsClicked(View view) {
-        dm.delAllBoard(new IResultListener() {
-            @Override
-            public void onSuccess(Object result) {
-                KLog.p("del all boards success");
-                for (IPaintBoard board : painter.getAllPaintBoards()){
-                    delBoard(board.getBoardId());
-                }
-                showToast("已删除所有画板");
-            }
-
-            @Override
-            public void onFailed(int errorCode) {
-                KLog.p("del all boards failed");
-            }
-
-            @Override
-            public void onTimeout() {
-                KLog.p("del all boards timeout");
-            }
-        });
-    }
+//    /**
+//     * 删除所有画板
+//     * */
+//    public void onDelAllBoardsClicked(View view) {
+//        dm.delAllBoard(new IResultListener() {
+//            @Override
+//            public void onSuccess(Object result) {
+//                KLog.p("del all boards success");
+//                for (IPaintBoard board : painter.getAllPaintBoards()){
+//                    delBoard(board.getBoardId());
+//                }
+//                showToast("已删除所有画板");
+//            }
+//
+//            @Override
+//            public void onFailed(int errorCode) {
+//                KLog.p("del all boards failed");
+//            }
+//
+//            @Override
+//            public void onTimeout() {
+//                KLog.p("del all boards timeout");
+//            }
+//        });
+//    }
 
 
 
