@@ -1,6 +1,8 @@
 package com.sissi.vconfsdkdemo;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -30,6 +32,8 @@ import java.io.IOException;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
@@ -432,41 +436,75 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
     public void onInsertPicClicked(View view) {
         KLog.p("filePath=%s", filePath);
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard
-                && null != filePath
-                && new File(filePath).exists()) curBoard.insertPic(filePath);
+        if (null != curBoard) {
+            if (null != filePath
+                    && new File(filePath).exists()){
+                curBoard.insertPic(filePath);
+                showToast("图片已插入，长按可选中");
+            }else{
+                showToast("请先截屏！");
+            }
+        }
     }
 
+    private static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static String filePath;
     /**
      * 快照
      * */
     public void onSnapshotClicked(View view) {
-        IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.snapshot(IPaintBoard.AREA_WINDOW, 0, 0, new IPaintBoard.ISnapshotResultListener() {
-            @Override
-            public void onResult(Bitmap bitmap) {
-                File file = new File(Environment.getExternalStorageDirectory(), "snapshot.png");
-                filePath = file.getPath();
-                KLog.p("filePath=%s", filePath);
-                FileOutputStream fos;
-                try {
-                    fos = new FileOutputStream(file);
-                    boolean bSuccess = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    fos.flush();
-                    fos.close();
-                    showToast("截图保存在"+file.getPath());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//
+//                // Show an expanation to the user *asynchronously* -- don't block
+//                // this thread waiting for the user's response! After the user
+//                // sees the explanation, try again to request the permission.
+//
+//            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+//            }
+        }else {
+
+            IPaintBoard curBoard = painter.getCurrentPaintBoard();
+            if (null != curBoard)
+                curBoard.snapshot(IPaintBoard.AREA_WINDOW, 0, 0, new IPaintBoard.ISnapshotResultListener() {
+                    @Override
+                    public void onResult(Bitmap bitmap) {
+                        File file = new File(Environment.getExternalStorageDirectory(), "snapshot.png");
+                        filePath = file.getPath();
+                        KLog.p("filePath=%s", filePath);
+                        FileOutputStream fos;
+                        try {
+                            fos = new FileOutputStream(file);
+                            boolean bSuccess = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                            fos.flush();
+                            fos.close();
+                            showToast("截图保存在" + file.getPath());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        }
     }
 
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     /**
      * 收到其他协作方创建画板的通知
