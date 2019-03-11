@@ -22,7 +22,6 @@
             android:id="@+id/new_board"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onNewBoardClicked"
             android:text="new"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/line"/>
@@ -31,7 +30,6 @@
             android:id="@+id/switch_board"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onSwitchBoardClicked"
             android:text="switch"
             app:layout_constraintBaseline_toBaselineOf="@id/new_board"
             app:layout_constraintLeft_toRightOf="@id/new_board" />

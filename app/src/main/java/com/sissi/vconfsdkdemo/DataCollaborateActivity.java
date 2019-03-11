@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.kedacom.vconf.sdk.base.IResultListener;
 import com.kedacom.vconf.sdk.base.KLog;
-import com.kedacom.vconf.sdk.base.Msg;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.DefaultPaintFactory;
 import com.kedacom.vconf.sdk.datacollaborate.IPaintBoard;
@@ -18,10 +17,10 @@ import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
 //import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Environment;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
@@ -53,6 +52,8 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
     // 生命周期注册器
     private LifecycleRegistry lifecycleRegistry;
 
+    private Button newBoardBtn;
+    private Button switchBoardBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,67 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE); // LifecycleObserver将收到onCreate回调
 
         boardContainer = findViewById(R.id.data_collaborate_content);
+
+        // 创建画板事件处理
+        newBoardBtn = findViewById(R.id.new_board);
+        newBoardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                * 结果监听器使用方式1：使用成员变量的方式传入监听器。（适用于需要频繁多次使用的情形）
+                *
+                * 尽管此处上下文的直接外部类是OnClickListener，非LifecycleOwner，但是newBoardResultListener
+                * 的生命周期仍和DataCollaborateActivity绑定，因为决定结果监听器绑定关系的不是使用时的上下文环境，
+                * 而是定义时的上下文环境。
+                * */
+                dm.newBoard("e164", newBoardResultListener);
+            }
+        });
+
+        // 切换画板事件处理
+        switchBoardBtn = findViewById(R.id.switch_board);
+        switchBoardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                * 结果监听器使用方式2：直接传入匿名内部类实例。（一次性的监听器使用该方式比较方便）
+                *
+                * 不同于使用成员变量的方式，此处的结果监听器“定义”时的直接外部类是OnClickListener，非LifecycleOwner，
+                * 所以该结果监听器不能自动绑定到DataCollaborateActivity，可以通过getLifecycleOwner手动绑定。
+                * */
+                dm.switchBoard("board", new IResultListener() {
+
+                    @Override
+                    public LifecycleOwner getLifecycleOwner() {
+                        /*
+                         * 指定该监听器要绑定的生命周期对象。
+                         * */
+                        return DataCollaborateActivity.this;
+                    }
+
+                    @Override
+                    public void onSuccess(Object result) {
+                        KLog.p("switch board success");
+                        switchBoard((String) result);
+                        IPaintBoard curBoard = painter.getCurrentPaintBoard();
+                        String curBoardId = null != curBoard ? curBoard.getBoardId() : "null";
+                        showToast("已由画板"+curBoardId+"切换到画板"+result);
+                    }
+
+                    @Override
+                    public void onFailed(int errorCode) {
+                        KLog.p("switch board failed");
+                    }
+
+                    @Override
+                    public void onTimeout() {
+                        KLog.p("switch board timeout");
+                    }
+                });
+
+            }
+        });
+
 
         dm = DataCollaborateManager.getInstance(this.getApplication());
         // 监听画板操作通知（添加/删除/切换画板）
@@ -108,56 +170,85 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
 
 
     /**
-     * 创建画板
+     * 新建画板结果监听器。
+     * 该监听器可复用但仅可被创建画板接口复用。
+     *
+     * 因为该监听器的“直接”外部类DataCollaborateActivity是LifecycleOwner实例，
+     * 所以该监听器的生命周期自动和DataCollaborateActivity的绑定——在DataCollaborateActivity销毁时
+     * 该监听器自动注销无需用户手动处理。
      * */
-    public void onNewBoardClicked(View view) {
-        dm.newBoard("e164", new IResultListener() {
+    IResultListener newBoardResultListener = new IResultListener() {
 
-            @Override
-            public void onSuccess(Object result) {
-                KLog.p("newBoard success");
-                createBoard((BoardInfo) result);
-                showToast("已创建画板"+((BoardInfo)result).getId());
-            }
+        @Override
+        public void onSuccess(Object result) {
+            KLog.p("newBoard success");
+            createBoard((BoardInfo) result);
+            showToast("已创建画板"+((BoardInfo)result).getId());
+        }
 
-            @Override
-            public void onFailed(int errorCode) {
-                KLog.p("newBoard fail");
-            }
+        @Override
+        public void onFailed(int errorCode) {
+            KLog.p("newBoard fail");
+        }
 
-            @Override
-            public void onTimeout() {
-                KLog.p("newBoard timeout");
-            }
-        });
-    }
+        @Override
+        public void onTimeout() {
+            KLog.p("newBoard timeout");
+        }
+    };
 
-    /**
-     * 切换画板
-     * */
-    public void onSwitchBoardClicked(View view) {
-        dm.switchBoard("board", new IResultListener() {
 
-            @Override
-            public void onSuccess(Object result) {
-                KLog.p("switch board success");
-                switchBoard((String) result);
-                IPaintBoard curBoard = painter.getCurrentPaintBoard();
-                String curBoardId = null != curBoard ? curBoard.getBoardId() : "null";
-                showToast("已由画板"+curBoardId+"切换到画板"+result);
-            }
+//    /**
+//     * 创建画板
+//     * */
+//    public void onNewBoardClicked(View view) {
+//        dm.newBoard("e164", new IResultListener() {
+//
+//            @Override
+//            public void onSuccess(Object result) {
+//                KLog.p("newBoard success");
+//                createBoard((BoardInfo) result);
+//                showToast("已创建画板"+((BoardInfo)result).getId());
+//            }
+//
+//            @Override
+//            public void onFailed(int errorCode) {
+//                KLog.p("newBoard fail");
+//            }
+//
+//            @Override
+//            public void onTimeout() {
+//                KLog.p("newBoard timeout");
+//            }
+//        });
+//    }
 
-            @Override
-            public void onFailed(int errorCode) {
-                KLog.p("switch board failed");
-            }
-
-            @Override
-            public void onTimeout() {
-                KLog.p("switch board timeout");
-            }
-        });
-    }
+//    /**
+//     * 切换画板
+//     * */
+//    public void onSwitchBoardClicked(View view) {
+//        dm.switchBoard("board", new IResultListener() {
+//
+//            @Override
+//            public void onSuccess(Object result) {
+//                KLog.p("switch board success");
+//                switchBoard((String) result);
+//                IPaintBoard curBoard = painter.getCurrentPaintBoard();
+//                String curBoardId = null != curBoard ? curBoard.getBoardId() : "null";
+//                showToast("已由画板"+curBoardId+"切换到画板"+result);
+//            }
+//
+//            @Override
+//            public void onFailed(int errorCode) {
+//                KLog.p("switch board failed");
+//            }
+//
+//            @Override
+//            public void onTimeout() {
+//                KLog.p("switch board timeout");
+//            }
+//        });
+//    }
 
 
     /**
