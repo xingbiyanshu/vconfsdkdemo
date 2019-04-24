@@ -15,6 +15,7 @@ import com.kedacom.vconf.sdk.datacollaborate.IPaintFactory;
 import com.kedacom.vconf.sdk.datacollaborate.IPainter;
 import com.kedacom.vconf.sdk.datacollaborate.bean.BoardInfo;
 import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
+import com.kedacom.vconf.sdk.datacollaborate.bean.PainterInfo;
 
 //import androidx.appcompat.app.AppCompatActivity;
 
@@ -45,7 +46,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         配合SDK用以自动管理监听器的生命周期*/
         implements LifecycleOwner,
 
-        DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener, IPaintBoard.IPublisher {
+        DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener {
 
     private DataCollaborateManager dm;
     private IPaintFactory paintFactory;
@@ -182,13 +183,12 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         dm.addPaintOpListener(this);
 
         // 创建默认绘制工厂以创建画师和画板
-        /*
-        * 传入DefaultPaintFactory()的DataCollaborateActivity实例为生命周期拥有者（LifecycleOwner实例）
-        * 所以工厂创建出的画师和画板生命周期和该DataCollaborateActivity实例绑定，用户无需手动管理。
-        * （详见SDK说明）
-        * */
-        paintFactory = new DefaultPaintFactory(this);
-        painter = paintFactory.createPainter();
+        paintFactory = new DefaultPaintFactory(this,
+                this/* 产品的生命周期被绑定到该DataCollaborateActivity实例，用户无需手动管理。
+                NOTE: 如若不然，用户需调用painter#start启动painter工作，painter#stop停止工作并销毁。*/
+        );
+        painter = paintFactory.createPainter(new PainterInfo("myE164"));
+        painter.setRole(IPainter.ROLE_AUTHOR);
 
     }
 
@@ -332,6 +332,30 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
 
             }
         });
+
+        dm.delBoard("board", new IResultListener() {
+
+            @Override
+            public void onSuccess(Object result) {
+                KLog.p("del board success");
+                delBoard((String) result);
+                showToast("已删除画板"+result);
+            }
+
+            @Override
+            public void onFailed(int errorCode) {
+                KLog.p("del board failed");
+            }
+
+            @Override
+            public void onTimeout() {
+                KLog.p("del board timeout");
+
+            }
+        });
+
+        KLog.p("###################finish");
+        finish();
     }
 
     private IResultListener delAllBoardsResultListener;
@@ -540,15 +564,6 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
     }
 
     /**
-     * 发布绘制操作
-     * */
-    @Override
-    public void publish(OpPaint op) {
-        KLog.p("publish paint op %s", op);
-//        dm.publishPaintOp(op);
-    }
-
-    /**
      * 收到绘制操作
      * */
     @Override
@@ -557,17 +572,10 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         painter.paint(op);
     }
 
-    @Override
-    public void onBatchPaint(List<OpPaint> ops) {
-        painter.batchPaint(ops);
-    }
-
-
 
 
     private void createBoard(BoardInfo boardInfo){
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
-        paintBoard.setPublisher(DataCollaborateActivity.this);
         painter.addPaintBoard(paintBoard); // 创建画板并添加给painter管理。
     }
 
