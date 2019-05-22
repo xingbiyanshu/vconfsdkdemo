@@ -39,6 +39,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 
+import static com.kedacom.vconf.sdk.datacollaborate.IPaintBoard.Config.Tool.*;
+
 
 public class DataCollaborateActivity extends Activity // 继承的该Activity不是LifecycleOwner实例
         /* 针对未使用support库或androidx库中的已实现LifecycleOwner接口的Activity的情形，
@@ -393,7 +395,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * */
     public void onLineClicked(View view) {
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_LINE);
+        if (null != curBoard) curBoard.getConfig().setTool(LINE);
     }
 
     /**
@@ -401,7 +403,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * */
     public void onOvalClicked(View view) {
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_OVAL);
+        if (null != curBoard) curBoard.getConfig().setTool(OVAL);
     }
 
     /**
@@ -409,7 +411,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * */
     public void onRectClicked(View view) {
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_RECT);
+        if (null != curBoard) curBoard.getConfig().setTool(RECT);
     }
 
     /**
@@ -417,7 +419,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * */
     public void onPathClicked(View view) {
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_PENCIL);
+        if (null != curBoard) curBoard.getConfig().setTool(PENCIL);
     }
 
     /**
@@ -425,7 +427,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
      * */
     public void onEraserClicked(View view) {
         IPaintBoard curBoard = painter.getCurrentPaintBoard();
-        if (null != curBoard) curBoard.setTool(IPaintBoard.TOOL_RECT_ERASER);
+        if (null != curBoard) curBoard.getConfig().setTool(RECT_ERASER);
     }
 
 
@@ -573,9 +575,19 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
     }
 
 
-
+    private IPaintBoard.Config defaultBoardCfg =
+            new IPaintBoard.Config(PENCIL, 5, 0XFFFFFFFFL, 20, 50, 300, 5);
     private void createBoard(BoardInfo boardInfo){
         IPaintBoard paintBoard = paintFactory.createPaintBoard(boardInfo);
+//        paintBoard.getConfig().set(defaultBoardCfg);
+        paintBoard.getConfig()
+                .setTool(PENCIL)
+                .setPaintStrokeWidth(5)
+                .setPaintColor(0XFFFFFFFFL)
+                .setEraserSize(20)
+                .setMinZoomRate(50)
+                .setMaxZoomRate(300)
+                .setWcRevocableOpsCountLimit(5);
         painter.addPaintBoard(paintBoard); // 创建画板并添加给painter管理。
     }
 
