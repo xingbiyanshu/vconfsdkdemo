@@ -503,7 +503,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
 
             IPaintBoard curBoard = painter.getCurrentPaintBoard();
             if (null != curBoard)
-                curBoard.snapshot(IPaintBoard.AREA_WINDOW, 0, 0, new IPaintBoard.ISnapshotResultListener() {
+                curBoard.snapshot(IPaintBoard.AREA_ALL, 0, 0, new IPaintBoard.ISnapshotResultListener() {
                     @Override
                     public void onResult(Bitmap bitmap) {
                         File file = new File(Environment.getExternalStorageDirectory(), "snapshot.png");
