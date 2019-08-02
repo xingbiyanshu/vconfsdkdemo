@@ -9,6 +9,7 @@ import com.kedacom.vconf.sdk.amulet.IResultListener;
 import com.kedacom.vconf.sdk.common.type.SimulatedError;
 import com.kedacom.vconf.sdk.common.type.SimulatedTimeout;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
+import com.kedacom.vconf.sdk.datacollaborate.DcErrorCode;
 import com.kedacom.vconf.sdk.datacollaborate.bean.BoardInfo;
 import com.kedacom.vconf.sdk.datacollaborate.bean.DCMember;
 import com.kedacom.vconf.sdk.datacollaborate.bean.DcConfInfo;
@@ -63,6 +64,7 @@ public class MainActivity extends FragmentActivity {
 
                     dataCollaborateManager.feedSimulatedData("startCollaborate",
                             new DcConfInfo("123456", "dc conf", EDcMode.Auto, EConfType.MCC, true));
+//                    dataCollaborateManager.feedSimulatedData("startCollaborate", new SimulatedError(DcErrorCode.BuildLink4ConfFailed));
                     // 创建数据协作
                     dataCollaborateManager.startCollaborate("confE164", "confName", EDcMode.Auto, EConfType.MCC, "adminE164", null,
                             new IResultListener() {
@@ -77,7 +79,7 @@ public class MainActivity extends FragmentActivity {
 
                                 @Override
                                 public void onFailed(int errorCode) {
-                                    KLog.p("createDcConf onFailed");
+                                    KLog.p("createDcConf onFailed %s", errorCode);
                                 }
 
                                 @Override
