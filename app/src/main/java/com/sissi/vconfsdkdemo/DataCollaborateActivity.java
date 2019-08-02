@@ -6,8 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import com.kedacom.vconf.sdk.base.IResultListener;
-import com.kedacom.vconf.sdk.base.KLog;
+import com.kedacom.vconf.sdk.amulet.IResultListener;
 import com.kedacom.vconf.sdk.datacollaborate.DataCollaborateManager;
 import com.kedacom.vconf.sdk.datacollaborate.DefaultPaintFactory;
 import com.kedacom.vconf.sdk.datacollaborate.IPaintBoard;
@@ -16,6 +15,7 @@ import com.kedacom.vconf.sdk.datacollaborate.IPainter;
 import com.kedacom.vconf.sdk.datacollaborate.bean.BoardInfo;
 import com.kedacom.vconf.sdk.datacollaborate.bean.OpPaint;
 import com.kedacom.vconf.sdk.datacollaborate.bean.PainterInfo;
+import com.kedacom.vconf.sdk.utils.log.KLog;
 
 //import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,7 +48,9 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         配合SDK用以自动管理监听器的生命周期*/
         implements LifecycleOwner,
 
-        DataCollaborateManager.IOnBoardOpListener, DataCollaborateManager.IOnPaintOpListener {
+        DataCollaborateManager.IOnBoardOpListener,
+        DataCollaborateManager.IOnPaintOpListener,
+        IPainter.IOnBoardStateChangedListener {
 
     private DataCollaborateManager dm;
     private IPaintFactory paintFactory;
@@ -179,10 +181,10 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         });
 
         dm = DataCollaborateManager.getInstance(this.getApplication());
-        // 监听画板操作通知（添加/删除/切换画板）
-        dm.addBoardOpListener(this);
-        // 监听画板绘制操作
-        dm.addPaintOpListener(this);
+//        // 监听画板操作通知（添加/删除/切换画板）
+//        dm.addBoardOpListener(this);
+//        // 监听画板绘制操作
+//        dm.addPaintOpListener(this);
 
         // 创建默认绘制工厂以创建画师和画板
         paintFactory = new DefaultPaintFactory(this,
@@ -191,7 +193,7 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         );
         painter = paintFactory.createPainter(new PainterInfo("myE164"));
         painter.setRole(IPainter.ROLE_AUTHOR);
-
+        painter.setOnBoardStateChangedListener(this);
     }
 
     @Override
@@ -574,6 +576,12 @@ public class DataCollaborateActivity extends Activity // 继承的该Activity不
         painter.paint(op);
     }
 
+
+    @Override
+    public void onPaintOpGenerated(String boardId, OpPaint op, IResultListener publishResultListener) {
+        KLog.p("publish op: %s", op);
+//        dm.publishPaintOp(op, publishResultListener);
+    }
 
     private IPaintBoard.Config defaultBoardCfg =
             new IPaintBoard.Config(PENCIL, 5, 0XFFFFFFFFL, 20, 50, 300, 5);
